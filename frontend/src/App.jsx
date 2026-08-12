@@ -15,8 +15,8 @@ const App = () => {
       try {
         const result = await axios.get(ServerUrl + "/api/user/current-user", {withCredentials: true })
         console.log(result.data)
-      } catch (err) {
-        console.log("User Error", err)
+      } catch (error) {
+        console.log("User Error", error)
       }
     }
   },[])
