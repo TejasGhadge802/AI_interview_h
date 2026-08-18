@@ -17,7 +17,7 @@ export const googleAuth = async (req, res) => {
             http: true,
             secure: false,
             sameSite: "strict",
-            maxAge: 7*24*60*60*1000
+            maxAge: 3*24*60*60*1000
         })
 
         return res.status(200).json(user)
@@ -34,7 +34,7 @@ export const googleAuth = async (req, res) => {
 export const logout =async (req, res) => {
     try {
         await res.clearCookie("token")
-        return res.status(200).json({message: "LogOut"})       
+        return res.status(200).json({message: "Logout"})       
     } catch (error) {
         return res.status(500).json({message: `fail to logout ${err}`})               
     }

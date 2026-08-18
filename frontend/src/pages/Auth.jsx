@@ -6,35 +6,36 @@ import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../utlis/firebase'
 import axios from "axios"
 import { ServerUrl } from '../App'
+import { useDispatch } from 'react-redux'
+import { setUserData } from '../redux/userSlice'
 
-const Auth = () => {
+const Auth = ({isModel = false}) => {
+
+    const dispatch = useDispatch()
 
     const handleGoogleAuth = async () => {
         try {
             const res = await signInWithPopup(auth, provider)
-            console.log(res)
 
             let User = res.user
             let name = User.displayName
             let email = User.email
             const result = await axios.post(ServerUrl + "/api/auth/google", 
                 { name, email }, { withCredentials: true })
-            console.log(result.data)
+            dispatch(setUserData(result.data))
         } catch (err) {
-            console.log("STATUS: ",err.response?.status)
-            console.log("DATA: ",err.response?.data)
-            console.log("ERROR: ",err.message)
+            dispatch(setUserData(null))
         }
     }
 
 
   return (
-    <div className='w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20'>
+    <div className={`w-full ${isModel ? "py-4": "min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20"}`}>
         <motion.div 
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-        className='w-full max-w-md p-8 rounded-3xl bg-white shadow-2xl border border-gray-200 '>
+        transition={{ duration: 0.2 }}
+        className={`w-full ${isModel ? "max-w-md p-8 rounded-3xl": "max-w-lg p-12 rounded-[32px]"} bg-white shadow-2xl border border-gray-200`}>
             <div className='flex item-center justify-center gap-3 mb-6'>
                 <div className='bg-black text-white p-2 rounded-lg'>
                     <FaRobot size={15}/>
