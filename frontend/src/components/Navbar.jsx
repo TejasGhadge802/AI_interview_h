@@ -16,7 +16,7 @@ const Navbar = () => {
 
     const [showCreditPopup, setShowCreditPopup] = useState(false)
     const [showUserPopup, setShowUserPopup] = useState(false)
-    const [showAuth, setShowAuth] = useState(false)
+        const [showAuth, setShowAuth] = useState(false)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
