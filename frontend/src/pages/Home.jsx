@@ -17,6 +17,7 @@ import AuthModel from '../components/AuthModel'
 {/* analytic img */} import img8 from "../assets/img8.png"     
 import img9 from "../assets/img9.png"
 import img10 from "../assets/img10.png"
+import Footer from '../components/Footer'
 
 const Home = () => {
   const { userData } = useSelector((state) => state.user);
@@ -205,7 +206,7 @@ const Home = () => {
                   <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: .5, delay: idx*.2 }}
+                    transition={{ duration: .1, delay: idx*.2 }}
                     whileHover={{ scale: 1.02 }}
                     key={idx} className='bg-white border border-gray-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all'>
                       <div className='flex flex-col md:flex-row items-center gap-8'>
@@ -241,47 +242,49 @@ const Home = () => {
               {
                 [
                   {
-                    img: img5,
-                    icon: <BsBarChart size={20}/>,
-                    title: "AI Answer Evalluation",
-                    desc: "Scores Communication, Technical Accuracy and Confidence",
+                    img: img1,
+                    title: "HR Interview Mode",
+                    desc: "Behavioral and communication based evalution",
                   },
                   {
-                    img: img6,
-                    icon: <BsFileEarmarkText size={20}/>,
-                    title: "Resume Based Interview",
-                    desc: "Project-specific quesrions based on uploaded resume",
+                    img: img2,
+                    title: "Technical Mode",
+                    desc: "Deep technical questioning based on selected role",
                   },
                   {
-                    img: img7,
-                    icon: <BsFileEarmarkText size={20}/>,
-                    title: "Download PDF Report",
-                    desc: "Detailed strengths, weakness and imporment insights",
+                    img: img3,
+                    title: "Confidence Delection",
+                    desc: "Basic tone and voice analysis insights",
                   },
                   {
-                    img: img8,
-                    icon: <BsBarChart size={20}/>,
-                    title: "History & Analytics",
-                    desc: "Track progress with performance graphs and topic analysis",
+                    img: img4,
+                    title: "Credits System",
+                    desc: "Unlock premium interview session easily",
                   },
                 ].map((item, idx)=>(
                   <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: .5, delay: idx*.2 }}
-                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: .1, delay: idx*.2 }}
+                    whileHover={{ y: -10 }}
                     key={idx} className='bg-white border border-gray-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all'>
-                      <div className='flex flex-col md:flex-row items-center gap-8'>
-                        <div className='w-full md:w-1/2 flex justify-center'>
-                          <img src={item.img} alt={item.title} className='w-full h-auto object-contain max-h-64'/>
+                      <div className='flex items-center justify-between gap-6'>
+                        <div className='w-1/2'>
+                          <h3 className='font-semibold text-xl mb-3'>
+                            {item.title}
+                          </h3>
+                          <p className='text-gray-500 text-sm leading-relaxed'>
+                            {item.desc}
+                          </p>
                         </div>
 
-                        <div className='w-full md:w-1/2 '>
-                          <div className='bg-green-50 text-green-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6'>
-                            {item.icon}
-                          </div>
-                          <h3 className='font-semibold mb-3 text-xl'>{item.title}</h3>
-                          <p className='text-gray-500 text-sm leading-relaxed'>{item.desc}</p>
+                        {/* RIGHT IMAGE */}
+                        <div className='w-1/2 flex justify-end'>
+                          <img 
+                            src={item.img}
+                            alt={item.title}
+                            className='w-28 h-28 object-contain'
+                          />
                         </div>
                       </div>
                   </motion.div>
@@ -293,6 +296,8 @@ const Home = () => {
         </div>
       </div>
       {showAuth && <AuthModel onClose={()=>setShowAuth(false)}/>}
+
+      <Footer/>
     </div>
   )
 }
