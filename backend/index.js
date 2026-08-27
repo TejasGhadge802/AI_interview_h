@@ -7,6 +7,7 @@ import cors from "cors"
 import { googleAuth } from "./controllers/auth.controller.js";
 import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.route.js";
+import interviewRouter from "./routes/interview.route.js";
 
 
 
@@ -23,7 +24,7 @@ app.use(cookieParser())
 
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
-
+app.use("/api/interview", interviewRouter)
 
 
 
