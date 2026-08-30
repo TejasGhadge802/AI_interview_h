@@ -68,7 +68,7 @@ export const analyzeResume = async (req, res) => {
 
 export const generateQuestion = async (req, res) => {
   try {
-    const { role, experience, mode, resumeText, projects, skills } = req.body;
+    let { role, experience, mode, resumeText, projects, skills } = req.body;
 
     role = role?.trim();
     experience = experience?.trim();
@@ -156,6 +156,7 @@ export const generateQuestion = async (req, res) => {
     const aiResponse = await askAi(messages);
 
     if (!aiResponse || !aiResponse.trim()) {
+      console.log("AI returned empty response.")
       return res.status(500).json({
         message: "AI returned empty response.",
       });
@@ -168,6 +169,7 @@ export const generateQuestion = async (req, res) => {
       .slice(0, 5);
 
     if (questionsArray.length === 0) {
+      console.log("AI returned empty response.")
       return res.status(500).json({
         message: "AI failed to generate questions.",
       });
@@ -196,6 +198,7 @@ export const generateQuestion = async (req, res) => {
       questions: interview.questions,
     });
   } catch (err) {
+    console.log(err)
     return res.status(500).json({
       message: `Failed to create interview ${err}`
     })
@@ -323,7 +326,47 @@ export const finishInterview = async (req, res) => {
         message: "Failed to find Interview"
       })
     }
+
+    const totalQuestions = interview.questions.length;
+
+    let totalScore = 0;
+    let totalConfidence = 0;
+    let totalCommunication = 0;
+    let totalCorrectness = 0;
+
+    interview.questions.forEach((q)=>{
+      totalScore += q.score || 0;
+      totalConfidence += q.confidence || 0;
+      totalCommunication += q.communication || 0;
+      totalCorrectness += q.correctness || 0;
+    })
+
+
+    const finalScore = totalQuestions ? totalScore/totalQuestions : 0;
+    const avgConfidence = totalQuestions ? totalConfidence/totalQuestions : 0;
+    const avgCommunication = totalQuestions ? totalCommunication/totalQuestions : 0;
+    const avgCorrectness = totalQuestions ? totalCorrectness/totalQuestions : 0;
+
+    interview.finalScore = finalScore;
+    interview.status = "completed"
+
+    return res.status(200).json({
+      finalScore: Number(finalScore.toFixed(1)),
+      confidence: Number(avgConfidence.toFixed(1)),
+      communication: Number(avgCommunication.toFixed(1)),
+      correctness: Number(avgCorrectness.toFixed(1)),
+      questionWiseScore: interview.questions.map((q)=> ({
+        question: q.question,
+        score: q.score || 0,
+        feedback: q.feedback || 0,
+        confidence: q.confidence || 0,
+        communication: q.communication || 0,
+        correctness: q.correctness || 0,
+      })),
+    })
   } catch (err) {
-    
+    return res.status(500).json({
+      message: `Failed to Finish Interview answer ${err}`
+    })
   }
 }

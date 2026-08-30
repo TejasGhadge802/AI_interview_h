@@ -4,7 +4,6 @@ const Step2Interview = ({interviewData, onFinish}) => {
     
   return (
     <div className=''>
-        
     </div>
   )
 }
