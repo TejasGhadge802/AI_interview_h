@@ -7,8 +7,8 @@ import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa'
 import { useRef } from 'react'
 import { useEffect } from 'react'
 import axios from "axios"
-import ServerUrl from "../App"
-import { BsArrowLeft } from 'react-icons/bs'
+import {ServerUrl} from "../App"
+import { BsArrowRight } from 'react-icons/bs'
 
 const Step2Interview = ({interviewData, onFinish}) => {
 
@@ -23,7 +23,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState("");
-  const [timeLeft, setTimeLeft] = useState(questions[0]?.timlimit || 60);
+  const [timeLeft, setTimeLeft] = useState(questions[0]?.timeLimit || 60);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [voiceGender, setVoiceGender] = useState("female");
@@ -169,7 +169,6 @@ const Step2Interview = ({interviewData, onFinish}) => {
   useEffect(()=>{
     if(isintroPhase) return;
     if(!currentQuestion) return;
-    if(isSubmitting)return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev)=>{
@@ -182,7 +181,14 @@ const Step2Interview = ({interviewData, onFinish}) => {
     }, 1000);
 
     return ()=>clearInterval(timer);
-  }, [isintroPhase, currentIndex, isSubmitting])
+  }, [isintroPhase, currentIndex])
+
+
+  useEffect(()=>{
+    if(!isintroPhase && currentQuestion){
+      setTimeLeft(currentQuestion.timeLimit || 60);
+    }
+  }, [currentIndex])
 
 
   useEffect(()=>{
@@ -238,7 +244,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
         interviewId,
         questionIndex: currentIndex,
         answer,
-        timeTaken: currentQuestion.timelimit - timeLeft,
+        timeTaken: currentQuestion.timeLimit - timeLeft,
       }, {withCredentials: true})
 
       setFeedback(result.data.feedback)
@@ -250,6 +256,57 @@ const Step2Interview = ({interviewData, onFinish}) => {
     }
   }
 
+
+  const handleNext = async () => {
+    setAnswer("");
+    setFeedback("");
+
+    if(currentIndex + 1 >= questions.length){
+      finishInterview();
+      return;
+    }
+
+    await speakText("Let's move on to the next question.");
+
+    setCurrentIndex((prev)=> prev + 1);
+
+    setTimeout(() => {
+      if(isMicOn) startMic();
+    }, 500);
+  }
+
+  const finishInterview = async (params) => {
+    stopMic();
+    setIsMicOn(false);
+    try {
+      const result  = await axios.post(ServerUrl + "/api/interview/finish", { interviewId }, { withCredentials: true })
+
+      console.log(result.data);
+      onFinish(result.data);
+    } catch (err) {
+      console.log("Finished Interview Error: ",err)
+    }
+  }
+
+  useEffect(()=> {
+    if(isintroPhase) return;
+    if(!currentQuestion) return;
+
+    if(timeLeft === 0 && !isSubmitting && !feedback){
+      submitAnswer();
+    }
+  }, [timeLeft]);
+
+  useEffect(()=>{
+    return () => {
+      if(recognitionRef.current){
+        recognitionRef.current.stop();
+        recognitionRef.current.abort();
+      }
+
+      window.speechSynthesis.cancel();
+    }
+  }, []);
 
 
 
@@ -293,7 +350,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
               <div className='h-px bg-gray-200'></div>
 
               <div className='flex justify-center'>
-                <Timer timeLeft={timeLeft} totalTime={currentQuestion?.timlimit || 60}/>
+                <Timer timeLeft={timeLeft} totalTime={currentQuestion?.timeLimit || 60}/>
               </div>
 
               <div className='h-px bg-gray-200'></div>
@@ -322,11 +379,13 @@ const Step2Interview = ({interviewData, onFinish}) => {
           </h2>
 
           {!isintroPhase && 
-            <div className='relative mb-6 bg-gray-50 p-4 sm:p-6 roundeed-2xl border border-gray-200 shadow-sm'>
-              <p className='text-xs sm:text-sm text-gray-400  mb-2'>Question {currentIndex + 1} of {questions.length}</p>
+            (
+              <div className='relative mb-6 bg-gray-50 p-4 sm:p-6 roundeed-2xl border border-gray-200 shadow-sm'>
+                <p className='text-xs sm:text-sm text-gray-400  mb-2'>Question {currentIndex + 1} of {questions.length}</p>
 
-              <div className='text-base sm:text-lg font-semibold text-gray-800 leading-relaxed'>{currentQuestion?.question}</div>
-            </div>
+                <div className='text-base sm:text-lg font-semibold text-gray-800 leading-relaxed'>{currentQuestion?.question}</div>
+              </div>
+            )
           }
 
           <textarea placeholder='Type your answer here...'
@@ -341,7 +400,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
             onClick={toggleMic}
             whileTap={{ scale: 0.9 }}
             className='w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full bg-black text-white shadow-lg'>
-              <FaMicrophone  size={20}/>
+              {isMicOn ? <FaMicrophone  size={20}/> : <FaMicrophoneSlash size={20}/>}
             </motion.button>
 
             <motion.button 
@@ -360,7 +419,9 @@ const Step2Interview = ({interviewData, onFinish}) => {
             className='mt-6 bg-emerald-50 border border-emerald-200 p-5 rounded-2xl shadow-sm'>
               <p className='text-emerald-700 font-mediummb-4'>{feedback}</p>
 
-              <button className='w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shaadow-md hover:opacity-90 transition flex items-center justify-center gap-1'>Next Question <BsArrowLeft size={18}/></button>
+              <button 
+              onClick={handleNext}
+              className='w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shaadow-md hover:opacity-90 transition flex items-center justify-center gap-1'>Next Question <BsArrowRight size={18}/></button>
             </motion.div>
           )}
 
