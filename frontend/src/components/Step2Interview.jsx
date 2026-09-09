@@ -104,7 +104,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
       utterance.onstart = () => {
         setIsAIPlaying(true);
-        stopMic();
+        stopMic();          // correct when ai speak mic off.
         videoRef.current?.play();
       }
 
@@ -155,9 +155,9 @@ const Step2Interview = ({interviewData, onFinish}) => {
         }
 
         await speakText(currentQuestion.question);
-        if(isMicOn){
-          startMic();
-        }
+        // if(isMicOn){              //MIC ALREADY START CALLING STARTMIC AGAIN
+        //   startMic();
+        // }
       }
     }
 
@@ -169,6 +169,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
   useEffect(()=>{
     if(isintroPhase) return;
     if(!currentQuestion) return;
+    if(isSubmitting) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev)=>{
@@ -181,7 +182,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
     }, 1000);
 
     return ()=>clearInterval(timer);
-  }, [isintroPhase, currentIndex])
+  }, [isintroPhase, currentIndex, isSubmitting])
 
 
   useEffect(()=>{
@@ -192,19 +193,19 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
 
   useEffect(()=>{
-    if(!("webkitSpeechRecogination" in window)) return;
+    if(!("webkitSpeechRecognition" in window)) return;
 
-    const recoginition = new window.webkitSpeechRecogination();
-    recoginition.lang = "en-US";
-    recoginition.continuous = true;
-    recoginition.interimResults = false;
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.continuous = true;
+    recognition.interimResults = false;
 
-    recoginition.onresult = (event)=> {
+    recognition.onresult = (event)=> {
       const transcript = event.results[event.results.length - 1][0].transcript;
       setAnswer((prev)=> prev + " " + transcript);
     }
 
-    recognitionRef.current = recoginition;
+    recognitionRef.current = recognition;
   }, [])
 
   const startMic = () => {
@@ -268,14 +269,14 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
     await speakText("Let's move on to the next question.");
 
-    setCurrentIndex((prev)=> prev + 1);
+    setCurrentIndex(currentIndex + 1);
 
-    setTimeout(() => {
-      if(isMicOn) startMic();
-    }, 500);
+    // setTimeout(() => {         //MIC ALREADY START CALLING STARTMIC AGAIN
+    //   if(isMicOn) startMic();
+    // }, 500);
   }
 
-  const finishInterview = async (params) => {
+  const finishInterview = async () => {
     stopMic();
     setIsMicOn(false);
     try {
