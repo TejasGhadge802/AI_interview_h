@@ -32,6 +32,13 @@ const Step2Interview = ({interviewData, onFinish}) => {
   const videoRef = useRef(null);
   
   const currentQuestion = questions[currentIndex];
+
+
+  const finalTranscriptRef = useRef("");
+
+
+
+  
   
   useEffect(()=>{
     const loadVoices = ()=>{
@@ -198,11 +205,32 @@ const Step2Interview = ({interviewData, onFinish}) => {
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-US";
     recognition.continuous = true;
-    recognition.interimResults = false;
+    recognition.interimResults = true;    
 
     recognition.onresult = (event)=> {
-      const transcript = event.results[event.results.length - 1][0].transcript;
-      setAnswer((prev)=> prev + " " + transcript);
+      // const transcript = event.results[event.results.length - 1][0].transcript;
+
+      // console.log("Transcript:", transcript);
+
+      // setAnswer((prev)=> prev + " " + transcript);
+
+
+          // ----------------------------- CHATGPT -----------------------------
+      let interim = "";
+
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const text = event.results[i][0].transcript;
+
+    if (event.results[i].isFinal) {
+      finalTranscriptRef.current += text + " ";
+    } else {
+      interim += text;
+    }
+  }
+
+  setAnswer(finalTranscriptRef.current + interim);
+
+
     }
 
     recognitionRef.current = recognition;
@@ -212,6 +240,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
     if(recognitionRef.current && !isAIPlaying){
       try {
         recognitionRef.current.start();
+        // console.log("MIC Started.")
       } catch (err) {
         console.error("Mic start Error", err);
       }
@@ -221,6 +250,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
   const stopMic = () => {
     if(recognitionRef.current){
       recognitionRef.current.stop();
+      // console.log("MIC Stop.")
     }
   };
   
@@ -271,9 +301,10 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
     setCurrentIndex(currentIndex + 1);
 
-    // setTimeout(() => {         //MIC ALREADY START CALLING STARTMIC AGAIN
-    //   if(isMicOn) startMic();
-    // }, 500);
+    setTimeout(() => {         //MIC ALREADY START CALLING STARTMIC AGAIN
+      if(isMicOn) startMic();
+      // console.log("SETTIMEOUT START")
+    }, 500);
   }
 
   const finishInterview = async () => {
@@ -282,10 +313,10 @@ const Step2Interview = ({interviewData, onFinish}) => {
     try {
       const result  = await axios.post(ServerUrl + "/api/interview/finish", { interviewId }, { withCredentials: true })
 
-      console.log(result.data);
+      // console.log(result.data);
       onFinish(result.data);
     } catch (err) {
-      console.log("Finished Interview Error: ",err)
+      // console.log("Finished Interview Error: ",err)
     }
   }
 
