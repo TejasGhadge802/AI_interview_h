@@ -317,6 +317,11 @@ export const submitAnswer = async (req, res) => {
 
 export const finishInterview = async (req, res) => {
   try {
+//----------------------------------- remove
+console.log("finishInterview called");
+console.log(req.body);
+
+
     const {interviewId} = req.body
 
     const interview = await Interview.findById(interviewId)
@@ -349,6 +354,13 @@ export const finishInterview = async (req, res) => {
 
     interview.finalScore = finalScore;
     interview.status = "completed"
+
+    await interview.save();
+
+//----------------------------------- remove
+const updated = await Interview.findById(interviewId);
+console.log("Status in DB:", updated.status);
+
 
     return res.status(200).json({
       finalScore: Number(finalScore.toFixed(1)),
