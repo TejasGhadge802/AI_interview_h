@@ -72,7 +72,7 @@ const Home = () => {
           <div className='flex flex-wrap justify-center gap-4 mt-10'>
             <motion.button
             onClick={()=>{
-                    console.log(userData)
+                    // console.log(userData)
 
               if(!userData){
                 setShowAuth(true)
