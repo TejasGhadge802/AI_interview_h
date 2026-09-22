@@ -90,7 +90,7 @@ const InterviewHistory = () => {
                                     {/* SCORE */}
                                     <div className='text-right'>
                                         <p className='text-xl font-bold text-emerald-600'>
-                                            {item.finalScore ?? 0}/10
+                                            {item.finalScore ?? 5}/10
                                         </p>
 
                                         <p className='text-xs text-gray-400'>
