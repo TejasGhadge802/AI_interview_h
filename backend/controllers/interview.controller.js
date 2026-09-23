@@ -370,7 +370,7 @@ console.log("Status in DB:", updated.status);
       questionWiseScore: interview.questions.map((q)=> ({
         question: q.question,
         score: q.score || 0,
-        feedback: q.feedback || 0,
+        feedback: q.feedback || "",
         confidence: q.confidence || 0,
         communication: q.communication || 0,
         correctness: q.correctness || 0,
@@ -388,7 +388,7 @@ export const getMyInterviews = async (req, res) => {
   try {
     const interviews = await Interview.find({userId: req.userId})
     .sort({ createdAt : -1 })
-    .select("role experience mode finalscore status createdAt");
+    .select("role experience mode finalScore status createdAt");
 
     return res.status(200).json({ interviews })
   } catch (err) {

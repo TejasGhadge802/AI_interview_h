@@ -52,8 +52,7 @@ const Step1SetUp = ({onStart}) => {
     setLoading(true)
     try {
       const result = await axios.post(ServerUrl + "/api/interview/generate-questions", {role, experience, mode, resumeText, projects, skills}, {withCredentials: true})
-
-      console.log(result.data)
+      // console.log(result.data)
 
       if(userData){
         dispatch(setUserData({...userData, credits: result.data.creditsLeft}))

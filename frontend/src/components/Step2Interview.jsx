@@ -218,19 +218,17 @@ const Step2Interview = ({interviewData, onFinish}) => {
           // ----------------------------- CHATGPT -----------------------------
       let interim = "";
 
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    const text = event.results[i][0].transcript;
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const text = event.results[i][0].transcript;
 
-    if (event.results[i].isFinal) {
-      finalTranscriptRef.current += text + " ";
-    } else {
-      interim += text;
-    }
-  }
+        if (event.results[i].isFinal) {
+          finalTranscriptRef.current += text + " ";
+        } else {
+          interim += text;
+        }
+      }
 
-  setAnswer(finalTranscriptRef.current + interim);
-
-
+      setAnswer(finalTranscriptRef.current + interim);
     }
 
     recognitionRef.current = recognition;
