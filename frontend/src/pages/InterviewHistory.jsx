@@ -69,7 +69,7 @@ const InterviewHistory = () => {
 
                                     <p className='text-gray-500 text-sm mt-1'>
                                         {item.experience.charAt(0).toUpperCase() + item.experience.slice(1)} 
-                                        ⚫ 
+                                        <span className="mx-3">|</span>
                                         {item.mode.charAt(0).toUpperCase() + item.mode.slice(1)}
                                     </p>
 
@@ -79,6 +79,9 @@ const InterviewHistory = () => {
                                                 day: "2-digit",
                                                 month: "short",
                                                 year: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: false,
                                             })
                                         }
                                     </p>
@@ -90,7 +93,7 @@ const InterviewHistory = () => {
                                     {/* SCORE */}
                                     <div className='text-right'>
                                         <p className='text-xl font-bold text-emerald-600'>
-                                            {item.finalScore ?? 5}/10
+                                            {Number(item.finalScore) ?? 5}/10
                                         </p>
 
                                         <p className='text-xs text-gray-400'>
