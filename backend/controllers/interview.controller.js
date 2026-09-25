@@ -426,11 +426,14 @@ export const getInterviewReport = async (req, res) => {
     const avgCorrectness = totalQuestions ? totalCorrectness/totalQuestions : 0;
 
     return res.status(200).json({
+      role: interview.role,
+      mode: interview.mode,
+
       finalScore: interview.finalScore,
       confidence: Number(avgConfidence.toFixed(1)),
       communication: Number(avgCommunication.toFixed(1)),
       correctness: Number(avgCorrectness.toFixed(1)),
-      questionWiseScore: interview.questions 
+      questionWiseScore: interview.questions,
     })
 
   } catch (err) {

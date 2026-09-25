@@ -19,6 +19,9 @@ const Step3Report = ({ report }) => {
   const navigate = useNavigate();
 
   const {
+    role = "role",
+    mode = "mode",
+
     finalScore = 0,
     confidence = 0,
     communication = 0,
@@ -93,117 +96,637 @@ const Step3Report = ({ report }) => {
 
 
 
+  // const downloadPDF = () => {
+  //   const doc = new jsPDF("p", "mm", "a4");
+
+  //   const pageWidth = doc.internal.pageSize.getWidth();
+  //   const margin = 20;
+  //   const contentWidth = pageWidth - margin  * 2;
+    
+  //   let currrentY = 25;
+    
+  //   // TITLE
+  //   doc.setFont("helvetica", "bold");
+  //   doc.setFontSize(20);
+  //   doc.setTextColor(34, 197, 94);
+  //   doc.text("AI Interview Performance Report", pageWidth / 2, currrentY, { align: "center" })
+
+  //   currrentY += 5;
+
+  //   // UNDERLINE
+  //   doc.setDrawColor(34, 197, 94);
+  //   doc.line(margin, currrentY + 2, pageWidth - margin, currrentY + 2);
+
+  //   currrentY += 15;
+
+  //   // FINAL SCORE
+  //   doc.setFillColor(240, 253, 244);
+  //   doc.roundedRect(margin, currrentY, contentWidth, 20, 4, 4, "F");
+
+  //   doc.setFontSize(14);
+  //   doc.setTextColor(0, 0, 0);
+  //   doc.text(
+  //     `Final Score: ${finalScore}/10`,
+  //     pageWidth / 2,
+  //     currrentY + 12,
+  //     { align: "center" } 
+  //   );
+
+  //   currrentY += 30;
+
+  //   // SKILLS SECTION
+  //   doc.setFillColor(249, 250, 251);
+  //   doc.roundedRect(margin, currrentY, contentWidth, 30, 4, 4, "F");
+
+  //   doc.setFontSize(12);
+
+  //   doc.text(`Confidence: ${confidence}`, margin + 10, currrentY + 10);
+  //   doc.text(`Communication: ${communication}`, margin + 10, currrentY + 18);
+  //   doc.text(`Correctness: ${correctness}`, margin + 10, currrentY + 26);
+
+  //   currrentY += 45;
+
+  //   // ADVICE
+  //   let advice = "";
+  //   if(finalScore >= 8){
+  //     advice = "Excellent performace. Maintain confidence and structure. Continue refining clarity and supporting answers with strong real-world examples.";
+  //   }else if(finalScore >= 5){
+  //     advice = "Good Foundation shown. Improve clarity and structure. Practice delivering concise, confident and answer with stronger supporting examples."; 
+  //   }else{
+  //     advice = "Significant improvement required. Focus on structured thinking clarity, and confident delivery. Practice answerring aloud regularly.";
+  //   }
+
+  //   doc.setFillColor(255, 255, 255);
+  //   doc.setDrawColor(220);
+  //   doc.roundedRect(margin, currrentY, contentWidth, 35, 4, 4);
+    
+  //   doc.setFont("helvetica", "bold");
+  //   doc.text("Professional Advice", margin + 10, currrentY + 10);
+
+  //   doc.setFont("helvetica", "normal");
+  //   doc.setFontSize(11);
+
+
+  //   const splitAdvice = doc.splitTextToSize(advice, contentWidth - 20);
+  //   doc.text(splitAdvice, margin + 10, currrentY + 20);
+
+  //   currrentY += 50;
+
+  //   // Question Table
+  //   autoTable(doc, {
+  //     startY: currrentY,
+  //     margin: { left: margin, right: margin },
+  //     head: [["#", "Question", "Score", "Feedback"]],
+  //     body: questionWiseScore.map((q, idx)=>[
+  //       `${idx + 1}`,
+  //       q.question,
+  //       `${q.score}/10`,
+  //       q.feedback,
+  //     ]),
+  //     styles: {
+  //       fontSize: 9,
+  //       cellPadding: 5,
+  //       valign: "top",
+  //     },
+  //     headStyles: {
+  //       fillColor: [34, 197, 94],
+  //       textColor: 255,
+  //       halign: "center",
+  //     },
+  //     columnStyles: {
+  //       0: { cellWidth: 10, halign: "center" },
+  //       1: { cellWidth: 55},
+  //       2: { cellWidth: 20, halign: "center" },
+  //       3: { cellWidth: "auto"},
+  //     },
+  //     alternateRowStyles:{
+  //       fillColor: [249, 250, 251],
+  //     },
+  //   });
+
+  //   doc.save("AI_Interview_Report.pdf");
+
+  // }
+
   const downloadPDF = () => {
-    const doc = new jsPDF("p", "mm", "a4");
+  const doc = new jsPDF("p", "mm", "a4");
 
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const margin = 20;
-    const contentWidth = pageWidth - margin  * 2;
-    
-    let currrentY = 25;
-    
-    // TITLE
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(34, 197, 94);
-    doc.text("AI Interview Performance Report", pageWidth / 2, currrentY, { align: "center" })
+  // -----------------------------
+  // CONSTANTS & COLORS
+  // -----------------------------
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
 
-    currrentY += 5;
+  const margin = 18;
+  const contentWidth = pageWidth - margin * 2;
 
-    // UNDERLINE
-    doc.setDrawColor(34, 197, 94);
-    doc.line(margin, currrentY + 2, pageWidth - margin, currrentY + 2);
+  const COLORS = {
+    green: [34, 197, 94],
+    darkGreen: [22, 101, 52],
+    lightGreen: [240, 253, 244],
+    veryLightGreen: [247, 254, 249],
 
-    currrentY += 15;
+    dark: [31, 41, 55],
+    gray: [107, 114, 128],
+    lightGray: [229, 231, 235],
+    background: [249, 250, 251],
+    white: [255, 255, 255],
 
-    // FINAL SCORE
-    doc.setFillColor(240, 253, 244);
-    doc.roundedRect(margin, currrentY, contentWidth, 20, 4, 4, "F");
+    yellow: [245, 158, 11],
+    red: [239, 68, 68],
+  };
 
-    doc.setFontSize(14);
-    doc.setTextColor(0, 0, 0);
-    doc.text(
-      `Final Score: ${finalScore}/10`,
-      pageWidth / 2,
-      currrentY + 12,
-      { align: "center" } 
+  let currentY = 20;
+
+  // -----------------------------
+  // HELPER FUNCTIONS
+  // -----------------------------
+
+  const addPageFooter = () => {
+    doc.setDrawColor(...COLORS.lightGray);
+    doc.line(
+      margin,
+      pageHeight - 14,
+      pageWidth - margin,
+      pageHeight - 14
     );
 
-    currrentY += 30;
-
-    // SKILLS SECTION
-    doc.setFillColor(249, 250, 251);
-    doc.roundedRect(margin, currrentY, contentWidth, 30, 4, 4, "F");
-
-    doc.setFontSize(12);
-
-    doc.text(`Confidence: ${confidence}`, margin + 10, currrentY + 10);
-    doc.text(`Communication: ${communication}`, margin + 10, currrentY + 18);
-    doc.text(`Correctness: ${correctness}`, margin + 10, currrentY + 26);
-
-    currrentY += 45;
-
-    // ADVICE
-    let advice = "";
-    if(finalScore >= 8){
-      advice = "Excellent performace. Maintain confidence and structure. Continue refining clarity and supporting answers with strong real-world examples.";
-    }else if(finalScore >= 5){
-      advice = "Good Foundation shown. Improve clarity and structure. Practice delivering concise, confident and answer with stronger supporting examples."; 
-    }else{
-      advice = "Significant improvement required. Focus on structured thinking clarity, and confident delivery. Practice answerring aloud regularly.";
-    }
-
-    doc.setFillColor(255, 255, 255);
-    doc.setDrawColor(220);
-    doc.roundedRect(margin, currrentY, contentWidth, 35, 4, 4);
-    
-    doc.setFont("helvetica", "bold");
-    doc.text("Professional Advice", margin + 10, currrentY + 10);
-
     doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...COLORS.gray);
+
+    doc.text(
+      "AI Interview Performance Report",
+      margin,
+      pageHeight - 8
+    );
+
+    doc.text(
+      `Page ${doc.internal.getNumberOfPages()}`,
+      pageWidth - margin,
+      pageHeight - 8,
+      { align: "right" }
+    );
+  };
+
+  const getScoreColor = (score) => {
+    if (score >= 8) return COLORS.green;
+    if (score >= 5) return COLORS.yellow;
+    return COLORS.red;
+  };
+
+  const getScoreLabel = (score) => {
+    if (score >= 8) return "Excellent";
+    if (score >= 5) return "Good";
+    return "Needs Improvement";
+  };
+
+  // -----------------------------
+  // HEADER
+  // -----------------------------
+
+  doc.setFillColor(...COLORS.lightGreen);
+  doc.roundedRect(
+    margin,
+    currentY,
+    contentWidth,
+    42,
+    5,
+    5,
+    "F"
+  );
+
+  // Small label
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(...COLORS.darkGreen);
+
+  doc.text(
+    "INTERVIEW ANALYSIS",
+    margin + 10,
+    currentY + 11
+  );
+
+  // Main title
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.setTextColor(...COLORS.dark);
+
+  doc.text(
+    "AI Interview Performance Report",
+    margin + 10,
+    currentY + 23
+  );
+
+  // Subtitle
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...COLORS.gray);
+
+  doc.text(
+    "Performance overview and question-by-question evaluation",
+    margin + 10,
+    currentY + 32
+  );
+
+  currentY += 52;
+
+  // -----------------------------
+  // SCORE CARD
+  // -----------------------------
+
+  const scoreColor = getScoreColor(finalScore);
+  const scoreLabel = getScoreLabel(finalScore);
+
+  doc.setFillColor(...COLORS.white);
+  doc.setDrawColor(...COLORS.lightGray);
+
+  doc.roundedRect(
+    margin,
+    currentY,
+    contentWidth,
+    35,
+    5,
+    5,
+    "FD"
+  );
+
+  // Left title
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...COLORS.dark);
+
+  doc.text(
+    "Overall Performance",
+    margin + 10,
+    currentY + 12
+  );
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...COLORS.gray);
+
+  doc.text(
+    "Your overall interview evaluation",
+    margin + 10,
+    currentY + 21
+  );
+
+  // Score badge
+  const badgeWidth = 45;
+  const badgeHeight = 23;
+  const badgeX = pageWidth - margin - badgeWidth;
+  const badgeY = currentY + 6;
+
+  doc.setFillColor(...scoreColor);
+
+  doc.roundedRect(
+    badgeX,
+    badgeY,
+    badgeWidth,
+    badgeHeight,
+    5,
+    5,
+    "F"
+  );
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(15);
+  doc.setTextColor(...COLORS.white);
+
+  doc.text(
+    `${finalScore}/10`,
+    badgeX + badgeWidth / 2,
+    badgeY + 10,
+    { align: "center" }
+  );
+
+  doc.setFontSize(8);
+
+  doc.text(
+    scoreLabel,
+    badgeX + badgeWidth / 2,
+    badgeY + 17,
+    { align: "center" }
+  );
+
+  currentY += 45;
+
+  // -----------------------------
+  // SKILLS SECTION
+  // -----------------------------
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(...COLORS.dark);
+
+  doc.text("Core Skills", margin, currentY);
+
+  currentY += 7;
+
+  const skillGap = 5;
+  const skillWidth = (contentWidth - skillGap * 2) / 3;
+  const skillHeight = 28;
+
+  const skills = [
+    {
+      label: "Confidence",
+      value: confidence,
+    },
+    {
+      label: "Communication",
+      value: communication,
+    },
+    {
+      label: "Correctness",
+      value: correctness,
+    },
+  ];
+
+  skills.forEach((skill, index) => {
+    const x = margin + index * (skillWidth + skillGap);
+
+    doc.setFillColor(...COLORS.background);
+    doc.setDrawColor(...COLORS.lightGray);
+
+    doc.roundedRect(
+      x,
+      currentY,
+      skillWidth,
+      skillHeight,
+      4,
+      4,
+      "FD"
+    );
+
+    // Skill label
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...COLORS.gray);
+
+    doc.text(
+      skill.label.toUpperCase(),
+      x + 7,
+      currentY + 9
+    );
+
+    // Skill value
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
+    doc.setTextColor(...COLORS.darkGreen);
 
+    doc.text(
+      String(skill.value),
+      x + 7,
+      currentY + 19
+    );
+  });
 
-    const splitAdvice = doc.splitTextToSize(advice, contentWidth - 20);
-    doc.text(splitAdvice, margin + 10, currrentY + 20);
+  currentY += skillHeight + 15;
 
-    currrentY += 50;
+  // -----------------------------
+  // PROFESSIONAL ADVICE
+  // -----------------------------
 
-    // Question Table
-    autoTable(doc, {
-      startY: currrentY,
-      margin: { left: margin, right: margin },
-      head: [["#", "Question", "Score", "Feedback"]],
-      body: questionWiseScore.map((q, idx)=>[
-        `${idx + 1}`,
-        q.question,
-        `${q.score}/10`,
-        q.feedback,
-      ]),
-      styles: {
-        fontSize: 9,
-        cellPadding: 5,
-        valign: "top",
-      },
-      headStyles: {
-        fillColor: [34, 197, 94],
-        textColor: 255,
-        halign: "center",
-      },
-      columnStyles: {
-        0: { cellWidth: 10, halign: "center" },
-        1: { cellWidth: 55},
-        2: { cellWidth: 20, halign: "center" },
-        3: { cellWidth: "auto"},
-      },
-      alternateRowStyles:{
-        fillColor: [249, 250, 251],
-      },
-    });
+  let advice = "";
 
-    doc.save("AI_Interview_Report.pdf");
-
+  if (finalScore >= 8) {
+    advice =
+      "Excellent performance. Maintain your confidence and structured approach. Continue refining clarity and strengthen your answers with relevant real-world examples.";
+  } else if (finalScore >= 5) {
+    advice =
+      "Good foundation demonstrated. Focus on improving clarity and answer structure. Practice delivering concise, confident responses supported by stronger examples.";
+  } else {
+    advice =
+      "Significant improvement is recommended. Focus on structured thinking, clarity, and confident delivery. Practice answering questions aloud regularly.";
   }
+
+  doc.setFillColor(...COLORS.veryLightGreen);
+  doc.setDrawColor(...COLORS.green);
+
+  doc.roundedRect(
+    margin,
+    currentY,
+    contentWidth,
+    40,
+    5,
+    5,
+    "FD"
+  );
+
+  // Accent bar
+  doc.setFillColor(...COLORS.green);
+
+  doc.roundedRect(
+    margin,
+    currentY,
+    3,
+    40,
+    2,
+    2,
+    "F"
+  );
+
+  // Advice heading
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...COLORS.darkGreen);
+
+  doc.text(
+    "Professional Advice",
+    margin + 10,
+    currentY + 11
+  );
+
+  // Advice text
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...COLORS.dark);
+
+  const splitAdvice = doc.splitTextToSize(
+    advice,
+    contentWidth - 22
+  );
+
+  doc.text(
+    splitAdvice,
+    margin + 10,
+    currentY + 20
+  );
+
+  currentY += 52;
+
+  // -----------------------------
+  // QUESTION-BY-QUESTION ANALYSIS
+  // -----------------------------
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(...COLORS.dark);
+
+  doc.text(
+    "Question-by-Question Analysis",
+    margin,
+    currentY
+  );
+
+  currentY += 5;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...COLORS.gray);
+
+  doc.text(
+    "Detailed evaluation of each interview response",
+    margin,
+    currentY + 5
+  );
+
+  currentY += 12;
+
+  // -----------------------------
+  // TABLE
+  // -----------------------------
+
+  autoTable(doc, {
+    startY: currentY,
+
+    margin: {
+      left: margin,
+      right: margin,
+      bottom: 20,
+    },
+
+    head: [
+      [
+        "#",
+        "Question",
+        "Score",
+        "Feedback",
+      ],
+    ],
+
+    body: questionWiseScore.map((q, idx) => [
+      `${idx + 1}`,
+      q.question,
+      `${q.score}/10`,
+      q.feedback,
+    ]),
+
+    theme: "grid",
+
+    styles: {
+      font: "helvetica",
+      fontSize: 8.5,
+      cellPadding: 4,
+      valign: "top",
+      textColor: COLORS.dark,
+      lineColor: COLORS.lightGray,
+      lineWidth: 0.2,
+    },
+
+    headStyles: {
+      fillColor: COLORS.darkGreen,
+      textColor: COLORS.white,
+      fontStyle: "bold",
+      fontSize: 9,
+      halign: "center",
+      valign: "middle",
+      cellPadding: 4,
+    },
+
+    bodyStyles: {
+      fillColor: COLORS.white,
+    },
+
+    alternateRowStyles: {
+      fillColor: COLORS.background,
+    },
+
+    columnStyles: {
+      0: {
+        cellWidth: 9,
+        halign: "center",
+        fontStyle: "bold",
+      },
+
+      1: {
+        cellWidth: 52,
+      },
+
+      2: {
+        cellWidth: 20,
+        halign: "center",
+        fontStyle: "bold",
+      },
+
+      3: {
+        cellWidth: "auto",
+      },
+    },
+
+    didParseCell: function (data) {
+      // Color score cells
+      if (
+        data.section === "body" &&
+        data.column.index === 2
+      ) {
+        const score =
+          parseFloat(data.cell.raw) || 0;
+
+        if (score >= 8) {
+          data.cell.styles.textColor =
+            COLORS.darkGreen;
+        } else if (score >= 5) {
+          data.cell.styles.textColor =
+            [180, 83, 9];
+        } else {
+          data.cell.styles.textColor =
+            [185, 28, 28];
+        }
+      }
+    },
+
+    didDrawPage: function () {
+      addPageFooter();
+    },
+  });
+
+  // -----------------------------
+  // FINAL FOOTER
+  // -----------------------------
+
+  const finalY = doc.lastAutoTable.finalY;
+
+  if (finalY < pageHeight - 25) {
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.setTextColor(...COLORS.gray);
+
+    doc.text(
+      "Generated by AI Interview Performance Analyzer",
+      pageWidth / 2,
+      finalY + 12,
+      { align: "center" }
+    );
+  }
+
+  // -----------------------------
+  // SAVE
+  // -----------------------------
+
+
+  const cleanFileName = (value) =>
+    String(value || "")
+      .trim()
+      .replace(/[^a-zA-Z0-9-_]/g, "_");
+
+  const fileName =
+    `${cleanFileName(role)}_${cleanFileName(mode)}_AI_Interview_Performance_Report.pdf`;
+
+  doc.save(fileName);
+
+};
 
 
   return (
