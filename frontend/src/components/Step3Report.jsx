@@ -94,7 +94,7 @@ const Step3Report = ({ report }) => {
 
 
   const downloadPDF = () => {
-    const doc = new jsPDF("p", "em", "a4");
+    const doc = new jsPDF("p", "mm", "a4");
 
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 20;
@@ -145,7 +145,64 @@ const Step3Report = ({ report }) => {
 
     // ADVICE
     let advice = "";
-    if(finalScore )
+    if(finalScore >= 8){
+      advice = "Excellent performace. Maintain confidence and structure. Continue refining clarity and supporting answers with strong real-world examples.";
+    }else if(finalScore >= 5){
+      advice = "Good Foundation shown. Improve clarity and structure. Practice delivering concise, confident and answer with stronger supporting examples."; 
+    }else{
+      advice = "Significant improvement required. Focus on structured thinking clarity, and confident delivery. Practice answerring aloud regularly.";
+    }
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(220);
+    doc.roundedRect(margin, currrentY, contentWidth, 35, 4, 4);
+    
+    doc.setFont("helvetica", "bold");
+    doc.text("Professional Advice", margin + 10, currrentY + 10);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+
+
+    const splitAdvice = doc.splitTextToSize(advice, contentWidth - 20);
+    doc.text(splitAdvice, margin + 10, currrentY + 20);
+
+    currrentY += 50;
+
+    // Question Table
+    autoTable(doc, {
+      startY: currrentY,
+      margin: { left: margin, right: margin },
+      head: [["#", "Question", "Score", "Feedback"]],
+      body: questionWiseScore.map((q, idx)=>[
+        `${idx + 1}`,
+        q.question,
+        `${q.score}/10`,
+        q.feedback,
+      ]),
+      styles: {
+        fontSize: 9,
+        cellPadding: 5,
+        valign: "top",
+      },
+      headStyles: {
+        fillColor: [34, 197, 94],
+        textColor: 255,
+        halign: "center",
+      },
+      columnStyles: {
+        0: { cellWidth: 10, halign: "center" },
+        1: { cellWidth: 55},
+        2: { cellWidth: 20, halign: "center" },
+        3: { cellWidth: "auto"},
+      },
+      alternateRowStyles:{
+        fillColor: [249, 250, 251],
+      },
+    });
+
+    doc.save("AI_Interview_Report.pdf");
+
   }
 
 
@@ -172,6 +229,7 @@ const Step3Report = ({ report }) => {
         </div>
 
         <motion.button
+          onClick={downloadPDF}
           whileHover={{ scale: 1.1, opacity: 0.8 }}
           whileTap={{ scale: 0.8 }}
           className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl shadow-md transition-all duration-150 font-semibold text-sm sm:text-base whitespace-nowrap shrink-0"
@@ -232,7 +290,7 @@ const Step3Report = ({ report }) => {
             }}
             className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8"
           >
-            <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-4 sm:mb-6">
               Skill Evaluation
             </h3>
 
