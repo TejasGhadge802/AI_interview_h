@@ -148,9 +148,9 @@ const Home = () => {
                 repeat: Infinity,
               }}
               className={`relative bg-white rounded-3xl border-2 border-green-100 hover:border-green-400 p-10 w-80 max-w-[90%] shadow-md hover:shadow-[0_0_20px_rgba(74, 222, 128, .35)] transition-all
-              ${idx == 0 && "rotate-[-4deg]"}
-              ${idx == 1 && "rotate-[3deg] md:mt-6 shadow-xl"}
-              ${idx == 2 && "rotate-[-3deg]"}`}
+              ${idx === 0 ? "-rotate-1" : ""}
+              ${idx === 1 ? "rotate-1 md:mt-6 shadow-xl" : ""}
+              ${idx === 2 ? "-rotate-1" : ""}`}
               >
                 <div className='absolute -top-8 left-1/2 -translate-x-1/2 bg-white border-2 border-green-500 text-green-600 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg'>
                   {item.icon}
