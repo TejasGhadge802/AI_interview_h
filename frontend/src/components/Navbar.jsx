@@ -16,7 +16,7 @@ const Navbar = () => {
 
     const [showCreditPopup, setShowCreditPopup] = useState(false)
     const [showUserPopup, setShowUserPopup] = useState(false)
-        const [showAuth, setShowAuth] = useState(false)
+    const [showAuth, setShowAuth] = useState(false)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -39,7 +39,7 @@ const Navbar = () => {
         initial={{opacity: 0, y:-50}}
         animate={{opacity: 1, y: 0}}
         transition={{duration:.3}}
-        className='w-full max-w-6xl bg-white rounded-[24px] shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative'>
+        className='w-full max-w-6xl bg-white rounded-[3xl] shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative'>
             <div className='flex items-center gap-3 cursor-pointer'>
                 <div className='bg-black text-white p-2 rounded-lg '>
                     <BsRobot size={18}/>
@@ -63,7 +63,7 @@ const Navbar = () => {
                     </button>
 
                     {showCreditPopup && (
-                        <div className='absolute right-[-50px] mt-3 w-64 bg-white shadow-xl border border-gray-200 rounded p-5 z-[98]'>
+                        <div className='absolute -right-12.5 mt-3 w-64 bg-white shadow-xl border border-gray-200 rounded p-5 z-98'>
                             <p className='text-sm text-gray-600 mb-4'>Wanna buy more credits to continue Interviews?</p>
                             <button onClick={()=>navigate("/pricing")} className='w-full bg-black text-white px-2 py-2 rounded-lg text-sm'>Buy Credits</button>
                         </div>
@@ -84,7 +84,7 @@ const Navbar = () => {
                     </button>
 
                     {showUserPopup && (
-                        <div className='absolute right-0 mt-3 w-48 bg-white shadow-xl border border-gray-200 rounded-xl p-4 z-[98]'>
+                        <div className='absolute right-0 mt-3 w-48 bg-white shadow-xl border border-gray-200 rounded-xl p-4 z-98'>
                             <p className='text-md text-blue-500 font-medium mb-1'>{userData?.name}</p>
 
                             <button onClick={()=>navigate("/history")} className='w-full text-left text-sm py-2 hover:text-black text-gray-600'>Interview History</button>
