@@ -56,14 +56,14 @@ const Pricing = () => {
   return (
     <div className='min-h-screen bg-linear-to-br from-gray-50 to-emerald-50 py-16 px-6'>
 
-      <div className='max-w-6xl mx-auto mb-14 flex items-start gap-4'>
+      <div className='max-w-6xl mx-auto mb-30 flex items-start gap-4'>
         
         <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-white shadow hover:shadow-md transition'>
           <FaArrowLeft className='text-gray-600 '/>
         </button>
 
         <div className='text-center w-full'>
-          <h1 className='text4xl font-bold text-gray-800'>
+          <h1 className='text-4xl font-bold text-gray-800'>
             Choose Your Plan
           </h1>
 
@@ -83,39 +83,51 @@ const Pricing = () => {
               key={p.id}
               whileHover={!p.default && { y: -5, scale: 1.05 }}
               onClick={() => !p.default && setSelectedPlan(p.id)}
-              className={`bg-white rounded-xl shadow-lg p-6 border-2 
+              className={`relative bg-white rounded-xl shadow-lg p-6 border-2 
               ${
                 isSelected ? 
                 'border-emerald-500 shadow-2xl bg-white' : 
                 'border-transparent shadow-2xl bg-white'
               }
               ${p.default ? 'cursor-not-allowed' : 'cursor-pointer'}
-              ${p.badge ? "" : ""}
               `}
             >
               {p.default && (
-                <span className='bg-gray-100 text-gray-800 text-sm font-bold px-3 py-1 rounded-full'>
+                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-100 bg-gray-800 text-sm font-bold px-3 py-1 rounded-full'>
                   Default
                 </span>
               )}
               {p.badge && (
-                <span className='bg-emerald-100 text-emerald-800 text-sm font-bold px-3 py-1 rounded-full'>
+                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-100 bg-emerald-800 text-sm font-bold px-3 py-1 rounded-full'>
                   {p.badge}
                 </span>
               )}
 
               
               <h3 className='text-xl font-bold text-gray-800 mt-4'>{p.name}</h3>
-              <p className='text-3xl font-bold text-emerald-500 mt-2'>{p.price}</p>
-              <p className='text-emerald-800 mt-2 font-medium flex items-center gap-2 my-2'>
-                <BsCoin />{p.credits} AI Interview Credits
-              </p>
+              <span className='flex items-center justify-between gap-3 mt-3'>
+                <p className='text-3xl font-bold text-emerald-500'>{p.price}</p>
+                <p className='text-emerald-800 mt-2 font-medium flex items-center gap-2'>
+                  {p.credits} AI Interview <BsCoin size={20}/> Credits
+                </p>
+              </span>
               <p className='text-gray-500 mt-2'>{p.description}</p>
               <ul className='mt-4 space-y-2'>
                 {p.features.map((feature, index) => (
                   <li key={index} className='flex items-center'>
-                    <svg className='w-5 h-5 text-emerald-500 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
-                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
+                    <svg
+                      className="w-5 h-5 bg-green-500 rounded-full p-1 mr-2"
+                      fill="none"
+                      stroke="white"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                     {feature}
                   </li>
