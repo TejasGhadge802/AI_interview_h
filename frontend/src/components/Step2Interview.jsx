@@ -30,7 +30,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
   const [subtitle, setSubtitle] = useState("");
 
   const videoRef = useRef(null);
-  
+
   const currentQuestion = questions[currentIndex];
 
 
@@ -38,8 +38,8 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
 
 
-  
-  
+
+
   useEffect(()=>{
     const loadVoices = ()=>{
       const voices = window.speechSynthesis.getVoices();
@@ -251,7 +251,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
       // console.log("MIC Stop.")
     }
   };
-  
+
   const toggleMic = () => {
     if(isMicOn){
       stopMic();
@@ -437,7 +437,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
             onClick={submitAnswer}
             disabled={isSubmitting}
             whileTap={{ scale: 0.9 }}
-            className='flex-1 bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 sm:py-4 rounded-2xl shadow-lg hover:oppacity-90 transition font-semibold disabled:bg-gray-500'>
+            className='flex-1 bg-linear-to-r from-emerald-600 to-teal-500 text-white py-3 sm:py-4 rounded-2xl shadow-lg hover:oppacity-90 transition font-semibold disabled:bg-gray-500'>
               {isSubmitting ? "Submitting..." : "Submit Answer"}
             </motion.button>
 
@@ -451,7 +451,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
               <button 
               onClick={handleNext}
-              className='w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shaadow-md hover:opacity-90 transition flex items-center justify-center gap-1'>Next Question <BsArrowRight size={18}/></button>
+              className='w-full bg-linear-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shaadow-md hover:opacity-90 transition flex items-center justify-center gap-1'>Next Question <BsArrowRight size={18}/></button>
             </motion.div>
           )}
 

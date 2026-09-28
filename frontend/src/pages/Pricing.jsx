@@ -108,7 +108,7 @@ const Pricing = () => {
               <span className='flex items-center justify-between gap-3 mt-3'>
                 <p className='text-3xl font-bold text-emerald-500'>{p.price}</p>
                 <p className='text-emerald-800 mt-2 font-medium flex items-center gap-2'>
-                  {p.credits} AI Interview <BsCoin size={20}/> Credits
+                  {p.credits} AI Interview<BsCoin size={18}/>Credits
                 </p>
               </span>
               <p className='text-gray-500 mt-2'>{p.description}</p>
