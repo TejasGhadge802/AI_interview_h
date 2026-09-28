@@ -208,7 +208,7 @@ const Pricing = () => {
                     "bg-gray-100 text-gray-700 hover:bg-emerald-100"
                   }`}>
                   {
-                    loadingPlan === plan.id ? 
+                    loadingPlan === p.id ? 
                     "Processing..." :
                     isSelected ?
                     "Process To Pay" :

@@ -9,7 +9,7 @@ const paymentSchema = new mongoose.Schema({
     },
     planId: String,
     amount: Number,
-    creadits: Number,
+    credits: Number,
     razorpayOrderId: String,
     razorpayPaymentId: String,
     status: {
@@ -20,6 +20,6 @@ const paymentSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-const Payment = mongoose.Model("Payment", paymentSchema)
+const Payment = mongoose.model("Payment", paymentSchema)
 
 export default Payment

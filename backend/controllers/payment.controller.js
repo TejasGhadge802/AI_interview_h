@@ -1,6 +1,7 @@
 import Payment from "../models/payment.model.js";
 import razorpy from "../services/razorpay.service.js";
 import crypto from "crypto"
+import User from "../models/user.model.js";
 
 
 
@@ -29,7 +30,7 @@ export const createOrder = async (req, res) => {
             planId,
             amount,
             credits,
-            razorpyOrderId: order.id,
+            razorpayOrderId: order.id,
             status: "created",
         })
 
@@ -42,6 +43,75 @@ export const createOrder = async (req, res) => {
 }
 
 
+// export const verifyPayment = async (req, res) => {
+//     try {
+//         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+//         const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+//         const expectedSignature = crypto
+//             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+//             .update(body)
+//             .digest("hex");
+
+
+//         console.log("Received signature:", razorpay_signature);
+//     console.log("Expected signature:", expectedSignature);
+        
+//         if(expectedSignature !== razorpay_signature){
+//             return res.status(400).json({
+//                 message: "Invaild Payment Signature."
+//             })
+//         }
+
+
+//         const payment = await Payment.findOne({
+//             razorpayOrderId: razorpay_order_id,
+//         })
+
+//         console.log("FOUND PAYMENT:", payment);
+
+//         if(!payment){
+//             return res.status(404).json({
+//                 message: "Payment Not Found"
+//             })
+//         }
+
+//         if(payment.status === "paid"){
+//             return res.json({
+//                 message: "Alreday Processed"
+//             })
+//         }
+
+
+//         // Update Payment Record
+//         payment.status ="paid";
+//         payment.razorpayPaymentId = razorpay_payment_id;
+//         await payment.save();
+
+
+//         // Add Credits To User
+//         const updateUser = await User.findByIdAndUpdate(payment.userId, {
+//             $inc: { credits: payment.credits}
+//         }, { new: true });
+
+
+//         res.json({
+//             success: true,
+//             message: "Payment verified and creadits added.",
+//             user: updateUser,
+//         })
+
+//     } catch (err) {
+//         console.error("VERIFY PAYMENT ERROR:", err);
+
+//         return res.status(500).json({
+//             message: `Failed Razorpay Payment: ${err.message}`
+//         });
+//     }
+// }
+
+
 export const verifyPayment = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -52,6 +122,10 @@ export const verifyPayment = async (req, res) => {
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
             .update(body)
             .digest("hex");
+
+
+        console.log("Received signature:", razorpay_signature);
+    console.log("Expected signature:", expectedSignature);
         
         if(expectedSignature !== razorpay_signature){
             return res.status(400).json({
@@ -61,8 +135,10 @@ export const verifyPayment = async (req, res) => {
 
 
         const payment = await Payment.findOne({
-            razorpyOrderId: razorpay_order_id,
+            razorpayOrderId: razorpay_order_id,
         })
+
+        console.log("FOUND PAYMENT:", payment);
 
         if(!payment){
             return res.status(404).json({
@@ -84,7 +160,7 @@ export const verifyPayment = async (req, res) => {
 
 
         // Add Credits To User
-        const updateUser = await UserActivation.findByIdAndUpdate(payment.userId, {
+        const updateUser = await User.findByIdAndUpdate(payment.userId, {
             $inc: { credits: payment.credits}
         }, { new: true });
 
@@ -96,8 +172,10 @@ export const verifyPayment = async (req, res) => {
         })
 
     } catch (err) {
+        console.error("VERIFY PAYMENT ERROR:", err);
+
         return res.status(500).json({
-            message: "Failed Razorpay Payment: ${error}"
-        })
+            message: `Failed Razorpay Payment: ${err.message}`
+        });
     }
 }
