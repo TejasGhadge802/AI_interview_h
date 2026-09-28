@@ -3,11 +3,18 @@ import { FaArrowLeft } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { BsCoin } from 'react-icons/bs'
+import axios from 'axios'
+import { ServerUrl } from '../App'
+import { useDispatch } from 'react-redux'
+import { setUserData } from '../redux/userSlice'
 
 const Pricing = () => {
 
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState("free");
+
+  const [loadingPlan, setLoadingPlan] = useState(null);
+  const dispatch = useDispatch()
 
   const plans = [
     {
@@ -27,7 +34,7 @@ const Pricing = () => {
     {
       id: "basic",  
       name: "Starter Plan",
-      price: "₹1",
+      price: "₹1",  //Change to 100 and also update on line no. 64
       credits: 150,
       description: "Great for focused practice and skill improvement.",
       features: [
@@ -52,6 +59,54 @@ const Pricing = () => {
       badge: "Superior",
     },
   ]
+
+
+  const handelPayment = async (plan) => {
+    try {
+      setLoadingPlan(plan.id);
+
+      const amount = 
+        plan.id === "basic" ? 1 :
+        plan.id === "pro" ? 500 : 0;
+
+      const result = await axios.post(ServerUrl + "/api/payment/order", {
+        planId: plan.id,
+        amount: amount,
+        credits: plan.credits,
+      }, { withCredentials: true })
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: result.data.amount,
+        currency: "INR",
+        name: "AI Interview Simulator",
+        description: `${plan.name} - ${plan.credits} Credits.`,
+        order_id: result.data.id,
+
+        handler:async function (res) {
+          const verifyPayment = await axios.post(ServerUrl + "/api/payment/verify", res, { withCredentials: true })
+
+          dispatch(setUserData(verifyPayment.data.user))
+
+          alert("Payment Succesful.")
+          navigate("/");
+        },
+        theme: {
+          color: "#10b981",
+        },
+      }
+
+
+      // TO OPEM RAZORPAY WINDOW
+      const razpay = new window.Razorpay(options);
+      razpay.open();
+      
+      setLoadingPlan(null);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
 
   return (
     <div className='min-h-screen bg-linear-to-br from-gray-50 to-emerald-50 py-16 px-6'>
@@ -137,15 +192,26 @@ const Pricing = () => {
 
               { 
                 !p.default &&
-                <button className={`w-full mt-8 py-3 rounded-xl font-semibold transition 
+                <button disabled={loadingPlan === p.id} 
+                onClick={(e)=>
+                  {e.stopPropagation()
+                  if(!isSelected){
+                    setSelectedPlan(p.id)
+                  }else{
+                    handelPayment(p)
+                  }
+                }}
+                className={`w-full mt-8 py-3 rounded-xl font-semibold transition 
                   ${
                     isSelected ?
                     "bg-emerald-600 text-white hover:opacity-90" :
                     "bg-gray-100 text-gray-700 hover:bg-emerald-100"
                   }`}>
                   {
+                    loadingPlan === plan.id ? 
+                    "Processing..." :
                     isSelected ?
-                    "Procced to Pay" :
+                    "Process To Pay" :
                     "Select Plan"
                   }
                 </button>
