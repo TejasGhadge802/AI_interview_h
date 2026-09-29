@@ -90,7 +90,7 @@ export const generateQuestion = async (req, res) => {
 
     if (user.credits < 50) {
       return res.status(400).json({
-        message: `Not enough credits, Min. {<BsCoin size={20}/>} 50 required.`,
+        message: `Not enough credits, Min. 50 required.`,
       });
     }
 
@@ -175,7 +175,7 @@ export const generateQuestion = async (req, res) => {
       });
     }
 
-    user.credits -= 1;                // Crediting
+    user.credits -= 50;               
     await user.save();
 
     const interview = await Interview.create({
