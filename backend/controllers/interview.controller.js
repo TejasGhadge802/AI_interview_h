@@ -175,7 +175,7 @@ export const generateQuestion = async (req, res) => {
       });
     }
 
-    user.credits -= 1;                // Crediting
+    user.credits -= 50;               
     await user.save();
 
     const interview = await Interview.create({
