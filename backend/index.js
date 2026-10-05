@@ -12,9 +12,19 @@ import paymentRouter from "./routes/payment.route.js";
 
 
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ai-interview-h-1-frontend.onrender.com"
+];
+
 const app = express();
 app.use(cors({
-    origin: "https://ai-interview-h-1-frontend.onrender.com",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true
 }))
 
