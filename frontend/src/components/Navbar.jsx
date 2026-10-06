@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion } from "motion/react"
-import { BsRobot, BsCoin, BsSun, BsMoon } from "react-icons/bs"
+import { BsRobot, BsCoin } from "react-icons/bs"
 import { HiOutlineLogout } from "react-icons/hi"
 import { FaUserAstronaut } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
@@ -9,12 +9,9 @@ import axios from 'axios'
 import { ServerUrl } from '../App'
 import { setUserData } from '../redux/userSlice'
 import AuthModel from './AuthModel'
-import { useTheme } from '../context/ThemeContext'
-
 
 const Navbar = () => {
     const { userData } = useSelector((state) => state.user)
-    const { theme, toggleTheme, isDark } = useTheme()
 
     const [showCreditPopup, setShowCreditPopup] = useState(false)
     const [showUserPopup, setShowUserPopup] = useState(false)
@@ -36,34 +33,20 @@ const Navbar = () => {
     }
 
   return (
-    <div className="bg-[#f3f3f3] dark:bg-gray-950 flex justify-center px-4 pt-6 transition-colors duration-300">
+    <div className="bg-[#0f172a] flex justify-center px-4 pt-6">
         <motion.div 
         initial={{opacity: 0, y:-50}}
         animate={{opacity: 1, y: 0}}
         transition={{duration:.3}}
-        className='w-full max-w-6xl bg-white dark:bg-gray-900 rounded-[3xl] shadow-sm border border-gray-200 dark:border-gray-800 px-6 sm:px-8 py-4 flex justify-between items-center relative transition-colors duration-300'>
+        className='w-full max-w-6xl bg-[#1e293b] text-white rounded-[3xl] shadow-lg border border-slate-700/80 px-8 py-4 flex justify-between items-center relative'>
             <div onClick={()=>navigate("/")} className='flex items-center gap-3 cursor-pointer'>
-                <div className='bg-black dark:bg-emerald-600 text-white p-2 rounded-lg transition-colors'>
+                <div className='bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 p-2 rounded-lg'>
                     <BsRobot size={18}/>
                 </div>
-                <h1 className='font-semibold hidden md:block text-lg text-gray-900 dark:text-white transition-colors'>AI Interview</h1>
+                <h1 className='font-semibold hidden md:block text-lg text-white'>AI Interview</h1>
             </div>
 
-            <div className='flex items-center gap-4 sm:gap-6 relative'>
-                {/* Theme Toggle Button */}
-                <motion.button
-                  whileTap={{ scale: 0.85 }}
-                  whileHover={{ scale: 1.08 }}
-                  onClick={toggleTheme}
-                  title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                  className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-amber-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors shadow-xs"
-                >
-                  {isDark ? (
-                    <BsSun className="text-amber-400 animate-spin-slow" size={18} />
-                  ) : (
-                    <BsMoon className="text-gray-700" size={17} />
-                  )}
-                </motion.button>
+            <div className='flex items-center gap-6 relative'>
                 <div className='relative'>
                     <button onClick={()=>{
                         if(!userData){
@@ -73,15 +56,15 @@ const Navbar = () => {
                         setShowCreditPopup(!showCreditPopup);
                         setShowUserPopup(false)
                     }}
-                         className='flex items-center gap-2 bg-gray-200 px-4 py-2 rounded-full text-md hover:bg-gray-400 transition'>
-                        <BsCoin size={20}/> 
-                        {userData?.credits || 0}
+                         className='flex items-center gap-2 bg-slate-700/80 hover:bg-slate-700 border border-slate-600 text-slate-200 px-4 py-2 rounded-full text-md transition shadow-xs cursor-pointer'>
+                        <BsCoin size={20} className='text-amber-400'/> 
+                        <span className='font-medium'>{userData?.credits || 0}</span>
                     </button>
 
                     {showCreditPopup && (
-                        <div className='absolute -right-12.5 mt-3 w-64 bg-white shadow-xl border border-gray-200 rounded p-5 z-98'>
-                            <p className='text-sm text-gray-600 mb-4'>Wanna buy more credits to continue Interviews?</p>
-                            <button onClick={()=>navigate("/pricing")} className='w-full bg-black text-white px-2 py-2 rounded-lg text-sm'>Buy Credits</button>
+                        <div className='absolute -right-12.5 mt-3 w-64 bg-[#1e293b] text-white shadow-2xl border border-slate-700 rounded-xl p-5 z-98'>
+                            <p className='text-sm text-slate-300 mb-4'>Wanna buy more credits to continue Interviews?</p>
+                            <button onClick={()=>navigate("/pricing")} className='w-full bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-2 rounded-lg text-sm font-medium transition cursor-pointer'>Buy Credits</button>
                         </div>
                     )}
                 </div>
@@ -95,18 +78,18 @@ const Navbar = () => {
                         setShowUserPopup(!showUserPopup);
                         setShowCreditPopup(false)
                     }}
-                         className='w-9 h-9 bg-black text-white rounded-full flex items-center justify-center font-semibold'>
+                         className='w-9 h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full flex items-center justify-center font-semibold shadow-md transition cursor-pointer'>
                         { userData ? userData?.name.slice(0,1).toUpperCase(): <FaUserAstronaut size={18}/> }
                     </button>
 
                     {showUserPopup && (
-                        <div className='absolute right-0 mt-3 w-48 bg-white shadow-xl border border-gray-200 rounded-xl p-4 z-98'>
-                            <p className='text-md text-blue-500 font-medium mb-1'>{userData?.name}</p>
+                        <div className='absolute right-0 mt-3 w-48 bg-[#1e293b] text-white shadow-2xl border border-slate-700 rounded-xl p-4 z-98'>
+                            <p className='text-md text-emerald-400 font-medium mb-1'>{userData?.name}</p>
 
-                            <button onClick={()=>navigate("/history")} className='w-full text-left text-sm py-2 hover:text-black text-gray-600'>Interview History</button>
+                            <button onClick={()=>navigate("/history")} className='w-full text-left text-sm py-2 text-slate-300 hover:text-white transition cursor-pointer'>Interview History</button>
 
                             <button onClick={handleLogout}
-                             className='w-full text-left text-sm py-2 flex items-center gap-2 text-red-500'> <HiOutlineLogout size={18}/>Logout</button>
+                             className='w-full text-left text-sm py-2 flex items-center gap-2 text-red-400 hover:text-red-300 transition cursor-pointer'> <HiOutlineLogout size={18}/>Logout</button>
                         </div>
                     )}
                 </div>
