@@ -18,6 +18,9 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
   const [isMicOn, setIsMicOn] = useState(true);
   const recognitionRef = useRef(null);
+  const isListeningRef = useRef(false);
+  const isAIPlayingRef = useRef(false);
+  const isMicOnRef = useRef(true);
   const [isAIPlaying, setIsAIPlaying] = useState(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,8 +36,15 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
   const currentQuestion = questions[currentIndex];
 
-
   const finalTranscriptRef = useRef("");
+
+  useEffect(() => {
+    isMicOnRef.current = isMicOn;
+  }, [isMicOn]);
+
+  useEffect(() => {
+    isAIPlayingRef.current = isAIPlaying;
+  }, [isAIPlaying]);
 
 
 
@@ -68,7 +78,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
             v.name.toLowerCase().includes("male")
           )
 
-        if (femaleVoice){
+        if (maleVoice){
           setSelectedVoice(maleVoice);
           setVoiceGender("male");
           return;
@@ -110,20 +120,21 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
 
       utterance.onstart = () => {
+        isAIPlayingRef.current = true;
         setIsAIPlaying(true);
-        stopMic();          // correct when ai speak mic off.
+        stopMic();          // silence mic while AI speaks
         videoRef.current?.play();
       }
 
       utterance.onend = () => {
         videoRef.current?.pause();
         videoRef.current.currentTime = 0;
+        isAIPlayingRef.current = false;
         setIsAIPlaying(false);
 
-        if(isMicOn){
+        if(isMicOnRef.current){
           startMic();
         }
-
 
         setTimeout(() => {
           setSubtitle("");
@@ -199,23 +210,30 @@ const Step2Interview = ({interviewData, onFinish}) => {
   }, [currentIndex])
 
 
-  useEffect(()=>{
-    if(!("webkitSpeechRecognition" in window)) return;
+  // Clear saved speech transcript when advancing to the next question
+  useEffect(() => {
+    finalTranscriptRef.current = "";
+  }, [currentIndex]);
 
-    const recognition = new window.webkitSpeechRecognition();
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      console.warn("Speech Recognition API is not supported in this browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.continuous = true;
-    recognition.interimResults = true;    
+    recognition.interimResults = true;
 
-    recognition.onresult = (event)=> {
-      // const transcript = event.results[event.results.length - 1][0].transcript;
+    recognition.onstart = () => {
+      isListeningRef.current = true;
+    };
 
-      // console.log("Transcript:", transcript);
-
-      // setAnswer((prev)=> prev + " " + transcript);
-
-
-          // ----------------------------- CHATGPT -----------------------------
+    recognition.onresult = (event) => {
       let interim = "";
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -229,37 +247,77 @@ const Step2Interview = ({interviewData, onFinish}) => {
       }
 
       setAnswer(finalTranscriptRef.current + interim);
-    }
+    };
+
+    // Auto-restart if browser cuts off after silence and mic is still on
+    recognition.onend = () => {
+      isListeningRef.current = false;
+      if (isMicOnRef.current && !isAIPlayingRef.current) {
+        try {
+          recognition.start();
+        } catch (_) {}
+      }
+    };
+
+    recognition.onerror = (event) => {
+      if (event.error === "no-speech") return;
+      if (event.error === "aborted") return;
+      console.warn("Speech recognition error:", event.error);
+      isListeningRef.current = false;
+    };
 
     recognitionRef.current = recognition;
-  }, [])
+
+    // Prompt for mic permission on mount so browser explicitly requests access
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          stream.getTracks().forEach((track) => track.stop());
+        })
+        .catch((err) => {
+          console.warn("Microphone access permission notice:", err);
+        });
+    }
+
+    return () => {
+      try {
+        recognition.stop();
+        recognition.abort();
+      } catch (_) {}
+      isListeningRef.current = false;
+    };
+  }, []);
 
   const startMic = () => {
-    if(recognitionRef.current && !isAIPlaying){
+    if (recognitionRef.current && !isListeningRef.current && !isAIPlayingRef.current) {
       try {
         recognitionRef.current.start();
-        // console.log("MIC Started.")
       } catch (err) {
-        console.error("Mic start Error", err);
+        console.warn("Mic start notice:", err);
       }
     }
   };
 
   const stopMic = () => {
-    if(recognitionRef.current){
-      recognitionRef.current.stop();
-      // console.log("MIC Stop.")
+    if (recognitionRef.current) {
+      isListeningRef.current = false;
+      try {
+        recognitionRef.current.stop();
+      } catch (_) {}
     }
   };
 
   const toggleMic = () => {
-    if(isMicOn){
+    if (isMicOn) {
+      isMicOnRef.current = false;
       stopMic();
-    }else{
+    } else {
+      isMicOnRef.current = true;
       startMic();
     }
-    setIsMicOn(!isMicOn);
-  } 
+    setIsMicOn((prev) => !prev);
+  };
 
 
   const submitAnswer = async () => {
@@ -347,7 +405,11 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
         {/* Video section */}
         <div className='w-full lg:w-[35%] bg-white flex flex-col items-center p-6 space-y-6 border-r border-gray-200'>
-            <div className='w-full max-w-md rounded-2xl overflow-hidden shadow-xl'>
+            <div className={`relative w-full max-w-md rounded-2xl overflow-hidden shadow-xl transition-all duration-500 ${
+              isAIPlaying 
+                ? "ring-4 ring-emerald-400 ring-offset-2 shadow-emerald-500/30 scale-[1.01]" 
+                : "border border-gray-200"
+            }`}>
               <video 
                 src={videoSource}
                 key={videoSource}
@@ -357,13 +419,46 @@ const Step2Interview = ({interviewData, onFinish}) => {
                 preload='auto'
                 className='w-full h-auto object-cover'
               />
+
+              {/* AI Speaking floating animation indicator */}
+              {isAIPlaying && (
+                <div className='absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md'>
+                  <div className='flex items-center gap-0.5 h-3'>
+                    <motion.span 
+                      animate={{ height: ["4px", "14px", "4px"] }} 
+                      transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} 
+                      className='w-1 bg-emerald-400 rounded-full inline-block' 
+                    />
+                    <motion.span 
+                      animate={{ height: ["10px", "4px", "12px", "6px"] }} 
+                      transition={{ repeat: Infinity, duration: 0.7, ease: "easeInOut", delay: 0.1 }} 
+                      className='w-1 bg-teal-300 rounded-full inline-block' 
+                    />
+                    <motion.span 
+                      animate={{ height: ["4px", "16px", "8px"] }} 
+                      transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut", delay: 0.2 }} 
+                      className='w-1 bg-emerald-400 rounded-full inline-block' 
+                    />
+                    <motion.span 
+                      animate={{ height: ["8px", "4px", "14px"] }} 
+                      transition={{ repeat: Infinity, duration: 0.65, ease: "easeInOut", delay: 0.15 }} 
+                      className='w-1 bg-teal-300 rounded-full inline-block' 
+                    />
+                  </div>
+                  <span className='text-xs font-semibold text-white tracking-wide'>AI Speaking</span>
+                </div>
+              )}
             </div>
 
             {/* SUBTITLE */}
             {subtitle && (
-              <div className='w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm'>
+              <motion.div 
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className='w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm'
+              >
                 <p className='text-gray-700 text-sm sm:text-base font-medium text-center leading-relaxed'>{subtitle}</p>
-              </div>
+              </motion.div>
             )}
 
 
@@ -371,10 +466,22 @@ const Step2Interview = ({interviewData, onFinish}) => {
             <div className='w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-md p-6 space-y-5'>
               <div className='flex justify-between items-center'>
                 <span className='text-sm text-gray-500'>Interview Status</span>
-                {isAIPlaying &&
-                  <span className='text-sm font-semibold text-emerald-600'>
-                    {isAIPlaying ? "AI Speaking" : ""}</span>
-                }
+                {isAIPlaying ? (
+                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 animate-pulse'>
+                    <span className='w-2 h-2 rounded-full bg-emerald-500 inline-block'></span>
+                    AI Speaking
+                  </span>
+                ) : isMicOn ? (
+                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-700'>
+                    <span className='w-2 h-2 rounded-full bg-teal-500 inline-block animate-ping'></span>
+                    Listening
+                  </span>
+                ) : (
+                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600'>
+                    <span className='w-2 h-2 rounded-full bg-gray-400 inline-block'></span>
+                    Muted
+                  </span>
+                )}
               </div>
 
               <div className='h-px bg-gray-200'></div>
@@ -426,12 +533,60 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
           {!feedback ?(
             <div className='flex items-center gap-4 mt-6'>
-            <motion.button 
-            onClick={toggleMic}
-            whileTap={{ scale: 0.9 }}
-            className='w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full bg-black text-white shadow-lg'>
-              {isMicOn ? <FaMicrophone  size={20}/> : <FaMicrophoneSlash size={20}/>}
-            </motion.button>
+            {/* Mic button with pulsing glow & active audio wave bars */}
+            <div className='relative flex items-center justify-center'>
+              {/* Outer pulsing ping rings when mic is on and user can speak */}
+              {isMicOn && !isAIPlaying && (
+                <>
+                  <span className='absolute -inset-2 rounded-full bg-emerald-400/30 animate-ping' />
+                  <span className='absolute -inset-1 rounded-full bg-teal-400/40 animate-pulse' />
+                </>
+              )}
+
+              <motion.button 
+                onClick={toggleMic}
+                whileTap={{ scale: 0.9 }}
+                animate={isMicOn && !isAIPlaying ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+                transition={isMicOn && !isAIPlaying ? { repeat: Infinity, duration: 1.4 } : {}}
+                className={`relative z-10 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-white shadow-xl transition-all duration-300 ${
+                  isMicOn 
+                    ? "bg-linear-to-r from-emerald-500 to-teal-500 shadow-emerald-500/50 hover:brightness-110" 
+                    : "bg-gray-800 hover:bg-gray-700 shadow-gray-500/20"
+                }`}
+                title={isMicOn ? "Mute Microphone" : "Unmute Microphone"}
+              >
+                {isMicOn ? <FaMicrophone size={20}/> : <FaMicrophoneSlash size={20}/>}
+              </motion.button>
+            </div>
+
+            {/* Listening Live Audio Visualizer bars */}
+            {isMicOn && !isAIPlaying && (
+              <div className='hidden sm:flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3.5 py-2.5 rounded-2xl shadow-xs'>
+                <div className='flex items-center gap-0.5 h-4'>
+                  <motion.span 
+                    animate={{ height: ["4px", "14px", "6px"] }} 
+                    transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }} 
+                    className='w-1 bg-emerald-500 rounded-full inline-block' 
+                  />
+                  <motion.span 
+                    animate={{ height: ["8px", "4px", "16px", "8px"] }} 
+                    transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut", delay: 0.1 }} 
+                    className='w-1 bg-teal-500 rounded-full inline-block' 
+                  />
+                  <motion.span 
+                    animate={{ height: ["14px", "6px", "12px"] }} 
+                    transition={{ repeat: Infinity, duration: 0.55, ease: "easeInOut", delay: 0.2 }} 
+                    className='w-1 bg-emerald-500 rounded-full inline-block' 
+                  />
+                  <motion.span 
+                    animate={{ height: ["6px", "16px", "4px"] }} 
+                    transition={{ repeat: Infinity, duration: 0.45, ease: "easeInOut", delay: 0.15 }} 
+                    className='w-1 bg-teal-500 rounded-full inline-block' 
+                  />
+                </div>
+                <span className='text-xs font-semibold text-emerald-700 tracking-wide'>Listening...</span>
+              </div>
+            )}
 
             <motion.button 
             onClick={submitAnswer}
