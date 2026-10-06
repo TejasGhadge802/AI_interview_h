@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion } from "motion/react"
-import { BsRobot, BsCoin } from "react-icons/bs"
+import { BsRobot, BsCoin, BsSun, BsMoon } from "react-icons/bs"
 import { HiOutlineLogout } from "react-icons/hi"
 import { FaUserAstronaut } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
@@ -9,10 +9,12 @@ import axios from 'axios'
 import { ServerUrl } from '../App'
 import { setUserData } from '../redux/userSlice'
 import AuthModel from './AuthModel'
+import { useTheme } from '../context/ThemeContext'
 
 
 const Navbar = () => {
     const { userData } = useSelector((state) => state.user)
+    const { theme, toggleTheme, isDark } = useTheme()
 
     const [showCreditPopup, setShowCreditPopup] = useState(false)
     const [showUserPopup, setShowUserPopup] = useState(false)
@@ -34,20 +36,34 @@ const Navbar = () => {
     }
 
   return (
-    <div className="bg-[#f3f3f3] flex justify-center px-4 pt-6">
+    <div className="bg-[#f3f3f3] dark:bg-gray-950 flex justify-center px-4 pt-6 transition-colors duration-300">
         <motion.div 
         initial={{opacity: 0, y:-50}}
         animate={{opacity: 1, y: 0}}
         transition={{duration:.3}}
-        className='w-full max-w-6xl bg-white rounded-[3xl] shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative'>
-            <div className='flex items-center gap-3 cursor-pointer'>
-                <div className='bg-black text-white p-2 rounded-lg '>
+        className='w-full max-w-6xl bg-white dark:bg-gray-900 rounded-[3xl] shadow-sm border border-gray-200 dark:border-gray-800 px-6 sm:px-8 py-4 flex justify-between items-center relative transition-colors duration-300'>
+            <div onClick={()=>navigate("/")} className='flex items-center gap-3 cursor-pointer'>
+                <div className='bg-black dark:bg-emerald-600 text-white p-2 rounded-lg transition-colors'>
                     <BsRobot size={18}/>
                 </div>
-                <h1 className='font-semibold hidden md:block text-lg'>AI Interview</h1>
+                <h1 className='font-semibold hidden md:block text-lg text-gray-900 dark:text-white transition-colors'>AI Interview</h1>
             </div>
 
-            <div className='flex items-center gap-6 relative'>
+            <div className='flex items-center gap-4 sm:gap-6 relative'>
+                {/* Theme Toggle Button */}
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
+                  whileHover={{ scale: 1.08 }}
+                  onClick={toggleTheme}
+                  title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-amber-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors shadow-xs"
+                >
+                  {isDark ? (
+                    <BsSun className="text-amber-400 animate-spin-slow" size={18} />
+                  ) : (
+                    <BsMoon className="text-gray-700" size={17} />
+                  )}
+                </motion.button>
                 <div className='relative'>
                     <button onClick={()=>{
                         if(!userData){
