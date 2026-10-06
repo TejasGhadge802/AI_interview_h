@@ -2,8 +2,9 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import { motion } from 'motion/react'
 import { useSelector } from 'react-redux'
-import { BsRobot, BsMic, BsClock, BsBarChart, BsFileEarmarkText } from 'react-icons/bs'
+import { BsRobot, BsMic, BsClock, BsBarChart, BsFileEarmarkText, BsCameraVideo, BsShieldCheck } from 'react-icons/bs'
 import { HiSparkles } from 'react-icons/hi'
+import { FaVideo } from 'react-icons/fa'
 import { useState } from 'react' 
 import { useNavigate } from 'react-router-dom'
 import AuthModel from '../components/AuthModel'
@@ -291,6 +292,70 @@ const Home = () => {
                 ))
               }
             </div>
+        </div>
+
+        {/* COMING SOON: VIDEO INTERVIEW FEATURE */}
+        <div className='mb-24'>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className='relative overflow-hidden rounded-3xl bg-linear-to-br from-gray-900 via-emerald-950 to-gray-900 text-white p-8 md:p-14 shadow-2xl border border-emerald-500/30'
+          >
+            {/* Background decorative glow effects */}
+            <div className='absolute -top-24 -right-24 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none' />
+            <div className='absolute -bottom-24 -left-24 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl pointer-events-none' />
+
+            <div className='relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12'>
+              <div className='max-w-2xl'>
+                <div className='inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs md:text-sm font-semibold tracking-wide uppercase mb-6'>
+                  <span className='w-2 h-2 rounded-full bg-emerald-400 animate-ping' />
+                  Coming Soon
+                </div>
+
+                <h2 className='text-3xl md:text-5xl font-bold tracking-tight mb-5 leading-tight'>
+                  AI Real-Time <span className='text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-200'>Video Interviews</span>
+                </h2>
+
+                <p className='text-gray-300 text-base md:text-lg leading-relaxed mb-8'>
+                  Experience authentic face-to-face AI interviews with real-time camera tracking, facial expression analysis, eye contact metrics, and dynamic adaptive questioning.
+                </p>
+
+                <div className='grid sm:grid-cols-2 gap-4 text-sm text-gray-200'>
+                  <div className='flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-xs'>
+                    <div className='p-2 bg-emerald-500/20 text-emerald-400 rounded-lg'>
+                      <BsCameraVideo size={18} />
+                    </div>
+                    <span>Face & Eye Contact Tracking</span>
+                  </div>
+                  <div className='flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-xs'>
+                    <div className='p-2 bg-emerald-500/20 text-emerald-400 rounded-lg'>
+                      <BsShieldCheck size={18} />
+                    </div>
+                    <span>Body Language & Confidence Score</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Visual preview card */}
+              <div className='w-full lg:w-96 flex flex-col items-center justify-center bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl text-center relative'>
+                <div className='relative w-20 h-20 rounded-2xl bg-linear-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg mb-4'>
+                  <FaVideo className='text-white text-3xl' />
+                  <span className='absolute -top-1 -right-1 flex h-4 w-4'>
+                    <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75' />
+                    <span className='relative inline-flex rounded-full h-4 w-4 bg-emerald-400' />
+                  </span>
+                </div>
+
+                <h3 className='font-semibold text-lg text-white mb-1'>Interactive Video Mode</h3>
+                <p className='text-xs text-gray-400 mb-5'>Next-Gen AI proctored video sessions launching soon</p>
+
+                <div className='w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold tracking-wider uppercase'>
+                  🚀 In Active Development
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         </div>
