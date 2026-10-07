@@ -399,16 +399,16 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-100 flex items-center justify-center p-4 sm:p-6'>
+    <div className='min-h-screen bg-[#0f172a] text-slate-100 flex items-center justify-center p-4 sm:p-6'>
 
-      <div className='w-full max-w-350 min-h-[80vh] bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col lg:flex-row overflow-hidden'>
+      <div className='w-full max-w-350 min-h-[80vh] bg-[#1e293b] rounded-3xl shadow-2xl border border-slate-700/80 flex flex-col lg:flex-row overflow-hidden'>
 
         {/* Video section */}
-        <div className='w-full lg:w-[35%] bg-white flex flex-col items-center p-6 space-y-6 border-r border-gray-200'>
+        <div className='w-full lg:w-[35%] bg-slate-900/60 flex flex-col items-center p-6 space-y-6 border-b lg:border-b-0 lg:border-r border-slate-700/80'>
             <div className={`relative w-full max-w-md rounded-2xl overflow-hidden shadow-xl transition-all duration-500 ${
               isAIPlaying 
-                ? "ring-4 ring-emerald-400 ring-offset-2 shadow-emerald-500/30 scale-[1.01]" 
-                : "border border-gray-200"
+                ? "ring-4 ring-emerald-400 ring-offset-2 ring-offset-slate-900 shadow-emerald-500/30 scale-[1.01]" 
+                : "border border-slate-700"
             }`}>
               <video 
                 src={videoSource}
@@ -422,7 +422,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
               {/* AI Speaking floating animation indicator */}
               {isAIPlaying && (
-                <div className='absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md'>
+                <div className='absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md border border-white/10'>
                   <div className='flex items-center gap-0.5 h-3'>
                     <motion.span 
                       animate={{ height: ["4px", "14px", "4px"] }} 
@@ -455,52 +455,52 @@ const Step2Interview = ({interviewData, onFinish}) => {
               <motion.div 
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                className='w-full max-w-md bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm'
+                className='w-full max-w-md bg-slate-800/90 border border-slate-700 rounded-xl p-4 shadow-sm'
               >
-                <p className='text-gray-700 text-sm sm:text-base font-medium text-center leading-relaxed'>{subtitle}</p>
+                <p className='text-slate-200 text-sm sm:text-base font-medium text-center leading-relaxed'>{subtitle}</p>
               </motion.div>
             )}
 
 
             {/* TIMER */}
-            <div className='w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-md p-6 space-y-5'>
+            <div className='w-full max-w-md bg-slate-800/90 border border-slate-700 rounded-2xl shadow-md p-6 space-y-5'>
               <div className='flex justify-between items-center'>
-                <span className='text-sm text-gray-500'>Interview Status</span>
+                <span className='text-sm text-slate-400 font-medium'>Interview Status</span>
                 {isAIPlaying ? (
-                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 animate-pulse'>
-                    <span className='w-2 h-2 rounded-full bg-emerald-500 inline-block'></span>
+                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 animate-pulse'>
+                    <span className='w-2 h-2 rounded-full bg-emerald-400 inline-block'></span>
                     AI Speaking
                   </span>
                 ) : isMicOn ? (
-                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-700'>
-                    <span className='w-2 h-2 rounded-full bg-teal-500 inline-block animate-ping'></span>
+                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/30'>
+                    <span className='w-2 h-2 rounded-full bg-teal-400 inline-block animate-ping'></span>
                     Listening
                   </span>
                 ) : (
-                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600'>
-                    <span className='w-2 h-2 rounded-full bg-gray-400 inline-block'></span>
+                  <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-700 text-slate-300 border border-slate-600'>
+                    <span className='w-2 h-2 rounded-full bg-slate-400 inline-block'></span>
                     Muted
                   </span>
                 )}
               </div>
 
-              <div className='h-px bg-gray-200'></div>
+              <div className='h-px bg-slate-700'></div>
 
               <div className='flex justify-center'>
                 <Timer timeLeft={timeLeft} totalTime={currentQuestion?.timeLimit || 60}/>
               </div>
 
-              <div className='h-px bg-gray-200'></div>
+              <div className='h-px bg-slate-700'></div>
 
               <div className='grid grid-cols-2 gap-6 text-center'>
                 <div>
-                  <span className='text-2xl font-bold text-emerald-600 mr-1'>{currentIndex + 1}</span>
-                  <span className='text-xs text-gray-400'>Current Question</span>
+                  <span className='text-2xl font-bold text-emerald-400 mr-1'>{currentIndex + 1}</span>
+                  <span className='text-xs text-slate-400 block mt-1'>Current Question</span>
                 </div>
 
                 <div>
-                  <span className='text-2xl font-bold text-emerald-600 mr-1'>{questions.length}</span>
-                  <span className='text-xs text-gray-400'>Total Question</span>
+                  <span className='text-2xl font-bold text-emerald-400 mr-1'>{questions.length}</span>
+                  <span className='text-xs text-slate-400 block mt-1'>Total Questions</span>
                 </div>
               </div>
 
@@ -510,17 +510,17 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
 
         {/* TEXT SECTION */}
-        <div className='flex-1 flex flex-col p-4 sm:p-6 md:p-8 relative'>
-          <h2 className='text-xl sm:text-2xl font-bold text-emerald-600 mb-6'>
+        <div className='flex-1 flex flex-col p-4 sm:p-6 md:p-8 relative bg-[#1e293b]'>
+          <h2 className='text-xl sm:text-2xl font-bold text-emerald-400 mb-6'>
             AI Interview
           </h2>
 
           {!isintroPhase && 
             (
-              <div className='relative mb-6 bg-gray-50 p-4 sm:p-6 roundeed-2xl border border-gray-200 shadow-sm'>
-                <p className='text-xs sm:text-sm text-gray-400  mb-2'>Question {currentIndex + 1} of {questions.length}</p>
+              <div className='relative mb-6 bg-slate-900/80 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-sm'>
+                <p className='text-xs sm:text-sm text-emerald-400 font-semibold mb-2'>Question {currentIndex + 1} of {questions.length}</p>
 
-                <div className='text-base sm:text-lg font-semibold text-gray-800 leading-relaxed'>{currentQuestion?.question}</div>
+                <div className='text-base sm:text-lg font-semibold text-white leading-relaxed'>{currentQuestion?.question}</div>
               </div>
             )
           }
@@ -528,7 +528,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
           <textarea placeholder='Type your answer here...'
             onChange={(e)=>setAnswer(e.target.value)}
             value={answer}
-            className='flex-1 bg-gray-100 p-4 sm:p-6 rounded-2xl resize-none outline-none border border-gray-200 focus:ring-2 focus:ring-emerald-500 transition text-gray-800'
+            className='flex-1 bg-slate-900 text-white placeholder-slate-400 p-4 sm:p-6 rounded-2xl resize-none outline-none border border-slate-700 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition min-h-[160px]'
           />
 
           {!feedback ?(
@@ -548,10 +548,10 @@ const Step2Interview = ({interviewData, onFinish}) => {
                 whileTap={{ scale: 0.9 }}
                 animate={isMicOn && !isAIPlaying ? { scale: [1, 1.08, 1] } : { scale: 1 }}
                 transition={isMicOn && !isAIPlaying ? { repeat: Infinity, duration: 1.4 } : {}}
-                className={`relative z-10 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-white shadow-xl transition-all duration-300 ${
+                className={`relative z-10 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full text-white shadow-xl transition-all duration-300 cursor-pointer ${
                   isMicOn 
                     ? "bg-linear-to-r from-emerald-500 to-teal-500 shadow-emerald-500/50 hover:brightness-110" 
-                    : "bg-gray-800 hover:bg-gray-700 shadow-gray-500/20"
+                    : "bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-slate-900/40"
                 }`}
                 title={isMicOn ? "Mute Microphone" : "Unmute Microphone"}
               >
@@ -561,38 +561,38 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
             {/* Listening Live Audio Visualizer bars */}
             {isMicOn && !isAIPlaying && (
-              <div className='hidden sm:flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3.5 py-2.5 rounded-2xl shadow-xs'>
+              <div className='hidden sm:flex items-center gap-1.5 bg-emerald-500/20 border border-emerald-500/30 px-3.5 py-2.5 rounded-2xl shadow-xs'>
                 <div className='flex items-center gap-0.5 h-4'>
                   <motion.span 
                     animate={{ height: ["4px", "14px", "6px"] }} 
                     transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }} 
-                    className='w-1 bg-emerald-500 rounded-full inline-block' 
+                    className='w-1 bg-emerald-400 rounded-full inline-block' 
                   />
                   <motion.span 
                     animate={{ height: ["8px", "4px", "16px", "8px"] }} 
                     transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut", delay: 0.1 }} 
-                    className='w-1 bg-teal-500 rounded-full inline-block' 
+                    className='w-1 bg-teal-300 rounded-full inline-block' 
                   />
                   <motion.span 
                     animate={{ height: ["14px", "6px", "12px"] }} 
                     transition={{ repeat: Infinity, duration: 0.55, ease: "easeInOut", delay: 0.2 }} 
-                    className='w-1 bg-emerald-500 rounded-full inline-block' 
+                    className='w-1 bg-emerald-400 rounded-full inline-block' 
                   />
                   <motion.span 
                     animate={{ height: ["6px", "16px", "4px"] }} 
                     transition={{ repeat: Infinity, duration: 0.45, ease: "easeInOut", delay: 0.15 }} 
-                    className='w-1 bg-teal-500 rounded-full inline-block' 
+                    className='w-1 bg-teal-300 rounded-full inline-block' 
                   />
                 </div>
-                <span className='text-xs font-semibold text-emerald-700 tracking-wide'>Listening...</span>
+                <span className='text-xs font-semibold text-emerald-300 tracking-wide'>Listening...</span>
               </div>
             )}
 
             <motion.button 
             onClick={submitAnswer}
             disabled={isSubmitting}
-            whileTap={{ scale: 0.9 }}
-            className='flex-1 bg-linear-to-r from-emerald-600 to-teal-500 text-white py-3 sm:py-4 rounded-2xl shadow-lg hover:oppacity-90 transition font-semibold disabled:bg-gray-500'>
+            whileTap={{ scale: 0.96 }}
+            className='flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-3 sm:py-4 rounded-2xl shadow-lg shadow-emerald-950/40 transition font-semibold disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed cursor-pointer'>
               {isSubmitting ? "Submitting..." : "Submit Answer"}
             </motion.button>
 
@@ -601,12 +601,12 @@ const Step2Interview = ({interviewData, onFinish}) => {
             <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className='mt-6 bg-emerald-50 border border-emerald-200 p-5 rounded-2xl shadow-sm'>
-              <p className='text-emerald-700 font-mediummb-4'>{feedback}</p>
+            className='mt-6 bg-slate-900/90 border border-emerald-500/40 p-5 rounded-2xl shadow-sm'>
+              <p className='text-emerald-300 font-medium mb-4 leading-relaxed'>{feedback}</p>
 
               <button 
               onClick={handleNext}
-              className='w-full bg-linear-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-xl shaadow-md hover:opacity-90 transition flex items-center justify-center gap-1'>Next Question <BsArrowRight size={18}/></button>
+              className='w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl shadow-md transition flex items-center justify-center gap-1 font-semibold cursor-pointer'>Next Question <BsArrowRight size={18}/></button>
             </motion.div>
           )}
 

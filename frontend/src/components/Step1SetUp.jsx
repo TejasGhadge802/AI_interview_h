@@ -44,6 +44,7 @@ const Step1SetUp = ({onStart}) => {
       setAnalyzing(false);
     } catch (err) {
       console.log("Handle Upload Resume Error: ",err)
+      setAnalyzing(false);
     }
   }
 
@@ -72,18 +73,18 @@ const Step1SetUp = ({onStart}) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: .6 }}
-      className='min-h-screen flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-300 px-4'>
-        <div className='w-full max-w-6xl bg-white rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden'>
+      className='min-h-screen flex items-center justify-center bg-[#0f172a] text-slate-100 px-4 py-8'>
+        <div className='w-full max-w-6xl bg-[#1e293b] rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden border border-slate-700/80'>
 
           <motion.div
             initial={{ x: -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: .5 }}
-            className='relative bg-linear-to-br from-green-50 to-green-200 p-12 flex flex-col justify-center'>
-              <h2 className='text-4xl font-bold text-gray-800 mb-6'>
+            className='relative bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-8 md:p-12 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-700/80'>
+              <h2 className='text-3xl md:text-4xl font-bold text-white mb-6'>
                 Start Your AI Interview
               </h2>
-              <p className='text-gray-600 mb-10'>
+              <p className='text-slate-300 mb-10 text-base leading-relaxed'>
                 Practice real interview scenarios powered by AI.
                 Improve Communication, technical skills, and confidence.
               </p>
@@ -92,15 +93,15 @@ const Step1SetUp = ({onStart}) => {
                 {
                   [
                     {
-                      icon: <FaUserTie className='text-green-600 text-xl' />,
+                      icon: <FaUserTie className='text-emerald-400 text-xl' />,
                       text: "Choose Role & Experience",
                     },
                     {
-                      icon: <FaMicrophoneAlt className='text-green-600 text-xl' />,
+                      icon: <FaMicrophoneAlt className='text-emerald-400 text-xl' />,
                       text: "Start Voice Interview",
                     },
                     {
-                      icon: <FaChartLine className='text-green-600 text-xl' />,
+                      icon: <FaChartLine className='text-emerald-400 text-xl' />,
                       text: "Performance Analytics",
                     },
                   ].map((item, idx)=>(
@@ -108,10 +109,10 @@ const Step1SetUp = ({onStart}) => {
                       initial={{y: 30, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.3 * idx *0.15 }}
-                      whileHover={{ scale: 1.05 }}
-                      className='flex items-center space-x-4 bg-white p-4 rounded-xl shadow-sm cursor-pointer'>
+                      whileHover={{ scale: 1.03 }}
+                      className='flex items-center space-x-4 bg-slate-800/90 border border-slate-700 p-4 rounded-xl shadow-sm cursor-pointer'>
                         {item.icon}
-                        <span className='text-gray-700 font-medium'>{item.text}</span>
+                        <span className='text-slate-200 font-medium'>{item.text}</span>
                     </motion.div>
                   ))
                 }
@@ -123,49 +124,47 @@ const Step1SetUp = ({onStart}) => {
             initial={{ x: 80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: .5 }}
-            className='p-12 bg-white'>
-              <h2 className='text-3xl font-bold text-gray-800 mb-8'>
+            className='p-8 md:p-12 bg-[#1e293b]'>
+              <h2 className='text-3xl font-bold text-white mb-8'>
                 Interview SetUp
               </h2>
 
               <div className='space-y-6'>
-                <div className='relative '>
-                  <FaUserTie className='absolute top-4 left-4 text-gray-400'/>
-                  <input type='text' placeholder='Enter Role' className='w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition' onChange={(e)=>(setRole(e.target.value))} value={role} />
+                <div className='relative'>
+                  <FaUserTie className='absolute top-4 left-4 text-slate-400'/>
+                  <input type='text' placeholder='Enter Role' className='w-full pl-12 pr-4 py-3 bg-slate-900 text-white placeholder-slate-400 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition' onChange={(e)=>(setRole(e.target.value))} value={role} />
                 </div>
 
-                <div className='relative '>
-                  <FaBriefcase className='absolute top-4 left-4 text-gray-400'/>
-                  <input type='text' placeholder='Experience' className='w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition' onChange={(e)=>(setExperience(e.target.value))} value={experience} />
+                <div className='relative'>
+                  <FaBriefcase className='absolute top-4 left-4 text-slate-400'/>
+                  <input type='text' placeholder='Experience' className='w-full pl-12 pr-4 py-3 bg-slate-900 text-white placeholder-slate-400 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition' onChange={(e)=>(setExperience(e.target.value))} value={experience} />
                 </div>
 
-                <select value={mode} className='w-full py-3 px-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition' onChange={(e)=>setMode(e.target.value)}>
-                  <option value="Technical">Technical Interview</option>
-                  <option value="HR">HR Interview</option>
+                <select value={mode} className='w-full py-3 px-4 bg-slate-900 text-white border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition cursor-pointer' onChange={(e)=>setMode(e.target.value)}>
+                  <option className='bg-slate-900 text-white' value="Technical">Technical Interview</option>
+                  <option className='bg-slate-900 text-white' value="HR">HR Interview</option>
                 </select>
 
 
                 {!analysisDone && (
                   <motion.div 
-                    whileHover={{ scale: 1.03 }}
+                    whileHover={{ scale: 1.02 }}
                     onClick={()=>document.getElementById("resumeUpload").click()}
-                    className='border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-green-500 hover:bg-green-50 transition'>
-                    <FaFileUpload className='text-4xl mx-auto text-green-600 mb-3'/>
-                    <input type='file' id="resumeUpload" accept='application/pdf' className='
-                    hidden' onChange={(e)=>setResumeFile(e.target.files[0])} />
-                    <p className='text-gray-600 font-medium'>
+                    className='border-2 border-dashed border-slate-700 rounded-xl p-8 text-center cursor-pointer hover:border-emerald-500 hover:bg-slate-900/50 transition'>
+                    <FaFileUpload className='text-4xl mx-auto text-emerald-400 mb-3'/>
+                    <input type='file' id="resumeUpload" accept='application/pdf' className='hidden' onChange={(e)=>setResumeFile(e.target.files[0])} />
+                    <p className='text-slate-300 font-medium'>
                       {resumeFile ? resumeFile.name : "Click to upload resume (Optional)"}
                     </p>
 
                     {resumeFile && (
                       <motion.button
                         whileHover={{ scale: 1.03 }}
-                        className='mt-4 bg-gray-900 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition'
+                        className='mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-5 py-2 rounded-lg transition shadow-md cursor-pointer'
                         onClick={(e)=>{
                           e.stopPropagation()
                           handleUploadResume()
                         }}>
-                        
                           {analyzing ? "Analyzing...": "Analyze Resume"}
                         </motion.button>
                     )}
@@ -176,47 +175,47 @@ const Step1SetUp = ({onStart}) => {
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className='bg-gray-50 border-gray-200 rounded-xl p-5 space-y-4'>
-                      <h3 className='text-lg font-semibold text-gray-800'>
+                    className='bg-slate-900/80 border border-slate-700 rounded-xl p-5 space-y-4'>
+                      <h3 className='text-lg font-semibold text-white'>
                         Resume Analysis Result
-
-                        {projects.length > 0 && (
-                          <div>
-                            <p className='font-semibold text-gray-700 mb-5'>
-                            Projects:</p>
-
-                            <ul className='list-disc list-inside text-gray-600 space-y-1'>
-                              {projects.map((pro, idx)=>(
-                                <li key={idx}>{pro}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        
-
-                        {skills.length > 0 && (
-                          <div>
-                            <p className='font-semibold text-gray-700 mb-1'>
-                            Skills:</p>
-
-                            <div className='flex flex-wrap gap-2'>
-                              {skills.map((ski, idx)=>(
-                                <span key={idx} className='bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm'>{ski}</span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
                       </h3>
+
+                      {projects.length > 0 && (
+                        <div>
+                          <p className='font-semibold text-slate-200 mb-2'>
+                            Projects:
+                          </p>
+
+                          <ul className='list-disc list-inside text-slate-300 space-y-1 text-sm'>
+                            {projects.map((pro, idx)=>(
+                              <li key={idx}>{pro}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {skills.length > 0 && (
+                        <div>
+                          <p className='font-semibold text-slate-200 mb-2'>
+                            Skills:
+                          </p>
+
+                          <div className='flex flex-wrap gap-2'>
+                            {skills.map((ski, idx)=>(
+                              <span key={idx} className='bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-sm font-medium'>{ski}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                   </motion.div>
                 )}
 
                 <motion.button
                   onClick={handleStart}
                   disabled={ !role || !experience || loading }
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: .95 }}
-                  className='w-full disabled:bg-gray-600 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full text-lg font-semibold transition duration-300 shadow-md'>
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: .96 }}
+                  className='w-full disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-full text-lg font-semibold transition duration-300 shadow-lg shadow-emerald-950/50 cursor-pointer'>
                     {loading ? "Starting..." : "Start Interview"}
                 </motion.button>
               </div>
