@@ -9,14 +9,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthModel from '../components/AuthModel'
 import { useTheme } from '../context/ThemeContext'
-{/* hr img */} import img1 from "../assets/img1.png"     
-{/* tech img */} import img2 from "../assets/img2.png"     
-{/* confidence img */} import img3 from "../assets/img3.png"     
-{/* credit img */} import img4 from "../assets/img4.png"     
-{/* eval img */} import img5 from "../assets/img5.png"     
-{/* resume img */} import img6 from "../assets/img6.png"     
-{/* pdf img */} import img7 from "../assets/img7.png"     
-{/* analytic img */} import img8 from "../assets/img8.png"     
+{/* hr img */} import img1 from "../assets/img1.jpg"     
+{/* tech img */} import img2 from "../assets/img2.jpg"     
+{/* confidence img */} import img3 from "../assets/img3.jpg"     
+{/* credit img */} import img4 from "../assets/img4.jpg"     
+{/* eval img */} import img5 from "../assets/img5.jpg"     
+{/* resume img */} import img6 from "../assets/img6.jpg"     
+{/* pdf img */} import img7 from "../assets/img7.jpg"     
+{/* analytic img */} import img8 from "../assets/img8.jpg"     
 import Footer from '../components/Footer'
 
 const Home = () => {
@@ -327,7 +327,7 @@ const Home = () => {
                     key={idx} className='bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 hover:border-emerald-500/40 rounded-3xl p-8 shadow-sm dark:shadow-lg hover:shadow-xl transition-all'>
                       <div className='flex flex-col md:flex-row items-center gap-8'>
                         <div className='w-full md:w-1/2 flex justify-center'>
-                          <img src={item.img} alt={item.title} className='w-full h-auto object-contain max-h-64 rounded-xl'/>
+                          <img src={item.img} alt={item.title} className='w-full h-auto object-cover max-h-60 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50'/>
                         </div>
 
                         <div className='w-full md:w-1/2'>
@@ -399,7 +399,7 @@ const Home = () => {
                           <img 
                             src={item.img}
                             alt={item.title}
-                            className='w-28 h-28 object-contain rounded-lg'
+                            className='w-28 h-28 md:w-32 md:h-32 object-cover rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50'
                           />
                         </div>
                       </div>
