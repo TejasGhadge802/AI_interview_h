@@ -7,12 +7,15 @@ import "react-circular-progressbar/dist/styles.css";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"
+import { useTheme } from "../context/ThemeContext";
 
 const Step3Report = ({ report }) => {
+  const { isDark } = useTheme();
+
   if (!report) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-slate-100 flex items-center justify-center">
-        <p className="text-slate-300 text-lg">Loading Report...</p>
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 flex items-center justify-center transition-colors duration-200">
+        <p className="text-slate-600 dark:text-slate-300 text-lg">Loading Report...</p>
       </div>
     );
   }
@@ -730,22 +733,22 @@ const Step3Report = ({ report }) => {
 
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-100 px-4 sm:px-6 lg:px-10 py-8">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 px-4 sm:px-6 lg:px-10 py-8 transition-colors duration-200">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="md:mb-10 w-full flex items-start gap-4">
           <button
             onClick={() => navigate("/history")}
-            className="mt-1 p-3 rounded-full bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white transition cursor-pointer shadow-sm"
+            className="mt-1 p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition cursor-pointer shadow-xs"
           >
             <FaArrowLeft />
           </button>
 
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
               Interview Report Dashboard
             </h1>
 
-            <p className="text-slate-300 mt-2">
+            <p className="text-slate-600 dark:text-slate-300 mt-2">
               Review your past interviews and performance.
             </p>
           </div>
@@ -755,7 +758,7 @@ const Step3Report = ({ report }) => {
           onClick={downloadPDF}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl shadow-lg shadow-emerald-950/40 transition-all duration-150 font-semibold text-sm sm:text-base whitespace-nowrap shrink-0 cursor-pointer"
+          className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/40 transition-all duration-150 font-semibold text-sm sm:text-base whitespace-nowrap shrink-0 cursor-pointer"
         >
           Download PDF
         </motion.button>
@@ -766,9 +769,9 @@ const Step3Report = ({ report }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-xl p-6 sm:p-8 text-center border border-slate-700/80"
+            className="bg-white dark:bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-sm dark:shadow-xl p-6 sm:p-8 text-center border border-slate-200 dark:border-slate-700/80"
           >
-            <h3 className="text-slate-300 mb-4 sm:mb-6 text-sm sm:text-base font-medium">
+            <h3 className="text-slate-600 dark:text-slate-300 mb-4 sm:mb-6 text-sm sm:text-base font-medium">
               Overall Performance
             </h3>
 
@@ -779,21 +782,21 @@ const Step3Report = ({ report }) => {
                 styles={buildStyles({
                   textSize: "20px",
                   pathColor: "#10b981",
-                  textColor: "#f87171",
-                  trailColor: "#334155",
+                  textColor: "#ef4444",
+                  trailColor: isDark ? "#334155" : "#e2e8f0",
                   pathTransitionDuration: 1.2,
                 })}
               />
             </div>
 
-            <p className="text-slate-400 mt-3 text-xs sm:text-sm">Out of 10</p>
+            <p className="text-slate-500 dark:text-slate-400 mt-3 text-xs sm:text-sm">Out of 10</p>
 
             <div className="mt-4">
-              <p className="font-semibold text-white text-sm sm:text-base">
+              <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">
                 {performanceText}
               </p>
 
-              <p className="text-slate-300 text-xs sm:text-sm mt-1">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-1">
                 {shortTagline}
               </p>
             </div>
@@ -810,9 +813,9 @@ const Step3Report = ({ report }) => {
               y: -4,
               transition: { duration: 0.2 },
             }}
-            className="bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-xl p-6 sm:p-8 border border-slate-700/80"
+            className="bg-white dark:bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-sm dark:shadow-xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700/80"
           >
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white mb-4 sm:mb-6">
               Skill Evaluation
             </h3>
 
@@ -825,14 +828,14 @@ const Step3Report = ({ report }) => {
               {skills.map((e, idx) => (
                 <motion.div key={idx} variants={skillItem}>
                   <div className="flex justify-between mb-2 text-sm sm:text-base">
-                    <span className="capitalize text-slate-200">{e.label}</span>
+                    <span className="capitalize text-slate-700 dark:text-slate-200">{e.label}</span>
 
-                    <span className="font-semibold text-emerald-400">
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                       {e.value}
                     </span>
                   </div>
 
-                  <div className="bg-slate-800 border border-slate-700 rounded-full h-2 sm:h-3 overflow-hidden">
+                  <div className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full h-2 sm:h-3 overflow-hidden">
                     <motion.div
                       className="bg-emerald-500 h-full rounded-full"
                       initial={{ width: 0 }}
@@ -854,8 +857,8 @@ const Step3Report = ({ report }) => {
           <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 border border-slate-700/80">
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
+          className="bg-white dark:bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-sm dark:shadow-xl p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white mb-4 sm:mb-6">
               Question-wise Performance
             </h3>
 
@@ -874,7 +877,7 @@ const Step3Report = ({ report }) => {
 
                   <CartesianGrid
                     strokeDasharray="4 4"
-                    stroke="#334155"
+                    stroke={isDark ? "#334155" : "#e2e8f0"}
                     vertical={false}
                   />
 
@@ -882,14 +885,14 @@ const Step3Report = ({ report }) => {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
+                    tick={{ fill: isDark ? "#94a3b8" : "#64748b", fontSize: 12 }}
                   />
 
                   <YAxis
                     domain={[0, 10]}
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
+                    tick={{ fill: isDark ? "#94a3b8" : "#64748b", fontSize: 12 }}
                   />
 
                   <Tooltip
@@ -899,14 +902,14 @@ const Step3Report = ({ report }) => {
                       strokeDasharray: "4 4",
                     }}
                     contentStyle={{
-                      backgroundColor: "#0f172a",
-                      border: "1px solid #334155",
+                      backgroundColor: isDark ? "#0f172a" : "#ffffff",
+                      border: isDark ? "1px solid #334155" : "1px solid #e2e8f0",
                       borderRadius: "12px",
-                      boxShadow: "0 8px 25px rgba(0,0,0,0.5)",
-                      color: "#f8fafc",
+                      boxShadow: isDark ? "0 8px 25px rgba(0,0,0,0.5)" : "0 8px 25px rgba(0,0,0,0.08)",
+                      color: isDark ? "#f8fafc" : "#1e293b",
                     }}
                     labelStyle={{
-                      color: "#34d399",
+                      color: isDark ? "#34d399" : "#059669",
                       fontWeight: 600,
                     }}
                   />
@@ -919,7 +922,7 @@ const Step3Report = ({ report }) => {
                     fill="url(#scoreGradient)"
                     dot={{
                       r: 4,
-                      fill: "#0f172a",
+                      fill: isDark ? "#0f172a" : "#ffffff",
                       stroke: "#10b981",
                       strokeWidth: 3,
                     }}
@@ -940,39 +943,39 @@ const Step3Report = ({ report }) => {
           <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 border border-slate-700/80"
+          className="bg-white dark:bg-[#1e293b] rounded-2xl sm:rounded-3xl shadow-sm dark:shadow-xl p-5 sm:p-8 border border-slate-200 dark:border-slate-700/80"
           >
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-6">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white mb-6">
               Question Breakdown
             </h3>
 
             <div className="space-y-6">
               {questionWiseScore.map((q, idx)=>(
-                <div key={idx} className="bg-slate-900/70 p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-700/80"> 
+                <div key={idx} className="bg-slate-50 dark:bg-slate-900/70 p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700/80"> 
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
                     <div>
-                      <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wide mb-1">
+                      <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
                         Question {idx + 1}
                       </p>
 
-                      <p className="font-semibold text-white text-sm sm:text-base leading-relaxed">
+                      <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base leading-relaxed">
                         {q.question || "Question not available."}
                       </p>
                     </div>
 
 
-                    <div className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3.5 py-1 rounded-full font-bold text-sm w-fit">
+                    <div className="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 px-3.5 py-1 rounded-full font-bold text-sm w-fit">
                       {q.score ?? 0}/10
                     </div>
 
                   </div>
 
-                  <div className="bg-slate-800/80 border border-slate-700 p-4 rounded-xl mt-3">
-                    <p className="text-sm text-emerald-400 font-semibold mb-1">
+                  <div className="bg-white dark:bg-slate-800/80 border border-emerald-100 dark:border-slate-700 p-4 rounded-xl mt-3">
+                    <p className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold mb-1">
                       AI Feedback
                     </p>
 
-                    <p className="text-sm text-slate-300 leading-relaxed">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                       {
                         q.feedback && q.feedback.trim() !== "" ?
                         q.feedback :

@@ -53,7 +53,6 @@ const Step1SetUp = ({onStart}) => {
     setLoading(true)
     try {
       const result = await axios.post(ServerUrl + "/api/interview/generate-questions", {role, experience, mode, resumeText, projects, skills}, {withCredentials: true})
-      // console.log(result.data)
 
       if(userData){
         dispatch(setUserData({...userData, credits: result.data.creditsLeft}))
@@ -73,18 +72,18 @@ const Step1SetUp = ({onStart}) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: .6 }}
-      className='min-h-screen flex items-center justify-center bg-[#0f172a] text-slate-100 px-4 py-8'>
-        <div className='w-full max-w-6xl bg-[#1e293b] rounded-3xl shadow-2xl grid md:grid-cols-2 overflow-hidden border border-slate-700/80'>
+      className='min-h-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 px-4 py-8 transition-colors duration-200'>
+        <div className='w-full max-w-6xl bg-white dark:bg-[#1e293b] rounded-3xl shadow-xl dark:shadow-2xl grid md:grid-cols-2 overflow-hidden border border-slate-200 dark:border-slate-700/80 transition-colors duration-200'>
 
           <motion.div
             initial={{ x: -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: .5 }}
-            className='relative bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-8 md:p-12 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-700/80'>
-              <h2 className='text-3xl md:text-4xl font-bold text-white mb-6'>
+            className='relative bg-linear-to-br from-emerald-50/60 via-teal-50/30 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8 md:p-12 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700/80'>
+              <h2 className='text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6'>
                 Start Your AI Interview
               </h2>
-              <p className='text-slate-300 mb-10 text-base leading-relaxed'>
+              <p className='text-slate-600 dark:text-slate-300 mb-10 text-base leading-relaxed'>
                 Practice real interview scenarios powered by AI.
                 Improve Communication, technical skills, and confidence.
               </p>
@@ -93,15 +92,15 @@ const Step1SetUp = ({onStart}) => {
                 {
                   [
                     {
-                      icon: <FaUserTie className='text-emerald-400 text-xl' />,
+                      icon: <FaUserTie className='text-emerald-600 dark:text-emerald-400 text-xl' />,
                       text: "Choose Role & Experience",
                     },
                     {
-                      icon: <FaMicrophoneAlt className='text-emerald-400 text-xl' />,
+                      icon: <FaMicrophoneAlt className='text-emerald-600 dark:text-emerald-400 text-xl' />,
                       text: "Start Voice Interview",
                     },
                     {
-                      icon: <FaChartLine className='text-emerald-400 text-xl' />,
+                      icon: <FaChartLine className='text-emerald-600 dark:text-emerald-400 text-xl' />,
                       text: "Performance Analytics",
                     },
                   ].map((item, idx)=>(
@@ -110,9 +109,9 @@ const Step1SetUp = ({onStart}) => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.3 * idx *0.15 }}
                       whileHover={{ scale: 1.03 }}
-                      className='flex items-center space-x-4 bg-slate-800/90 border border-slate-700 p-4 rounded-xl shadow-sm cursor-pointer'>
+                      className='flex items-center space-x-4 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-xs cursor-pointer'>
                         {item.icon}
-                        <span className='text-slate-200 font-medium'>{item.text}</span>
+                        <span className='text-slate-800 dark:text-slate-200 font-medium'>{item.text}</span>
                     </motion.div>
                   ))
                 }
@@ -124,25 +123,25 @@ const Step1SetUp = ({onStart}) => {
             initial={{ x: 80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: .5 }}
-            className='p-8 md:p-12 bg-[#1e293b]'>
-              <h2 className='text-3xl font-bold text-white mb-8'>
+            className='p-8 md:p-12 bg-white dark:bg-[#1e293b]'>
+              <h2 className='text-3xl font-bold text-slate-900 dark:text-white mb-8'>
                 Interview SetUp
               </h2>
 
               <div className='space-y-6'>
                 <div className='relative'>
                   <FaUserTie className='absolute top-4 left-4 text-slate-400'/>
-                  <input type='text' placeholder='Enter Role' className='w-full pl-12 pr-4 py-3 bg-slate-900 text-white placeholder-slate-400 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition' onChange={(e)=>(setRole(e.target.value))} value={role} />
+                  <input type='text' placeholder='Enter Role' className='w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition' onChange={(e)=>(setRole(e.target.value))} value={role} />
                 </div>
 
                 <div className='relative'>
                   <FaBriefcase className='absolute top-4 left-4 text-slate-400'/>
-                  <input type='text' placeholder='Experience' className='w-full pl-12 pr-4 py-3 bg-slate-900 text-white placeholder-slate-400 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition' onChange={(e)=>(setExperience(e.target.value))} value={experience} />
+                  <input type='text' placeholder='Experience' className='w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition' onChange={(e)=>(setExperience(e.target.value))} value={experience} />
                 </div>
 
-                <select value={mode} className='w-full py-3 px-4 bg-slate-900 text-white border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition cursor-pointer' onChange={(e)=>setMode(e.target.value)}>
-                  <option className='bg-slate-900 text-white' value="Technical">Technical Interview</option>
-                  <option className='bg-slate-900 text-white' value="HR">HR Interview</option>
+                <select value={mode} className='w-full py-3 px-4 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none transition cursor-pointer' onChange={(e)=>setMode(e.target.value)}>
+                  <option className='bg-white dark:bg-slate-900 text-slate-800 dark:text-white' value="Technical">Technical Interview</option>
+                  <option className='bg-white dark:bg-slate-900 text-slate-800 dark:text-white' value="HR">HR Interview</option>
                 </select>
 
 
@@ -150,10 +149,10 @@ const Step1SetUp = ({onStart}) => {
                   <motion.div 
                     whileHover={{ scale: 1.02 }}
                     onClick={()=>document.getElementById("resumeUpload").click()}
-                    className='border-2 border-dashed border-slate-700 rounded-xl p-8 text-center cursor-pointer hover:border-emerald-500 hover:bg-slate-900/50 transition'>
-                    <FaFileUpload className='text-4xl mx-auto text-emerald-400 mb-3'/>
+                    className='border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/50 dark:hover:bg-slate-900/50 transition'>
+                    <FaFileUpload className='text-4xl mx-auto text-emerald-600 dark:text-emerald-400 mb-3'/>
                     <input type='file' id="resumeUpload" accept='application/pdf' className='hidden' onChange={(e)=>setResumeFile(e.target.files[0])} />
-                    <p className='text-slate-300 font-medium'>
+                    <p className='text-slate-600 dark:text-slate-300 font-medium'>
                       {resumeFile ? resumeFile.name : "Click to upload resume (Optional)"}
                     </p>
 
@@ -175,18 +174,18 @@ const Step1SetUp = ({onStart}) => {
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className='bg-slate-900/80 border border-slate-700 rounded-xl p-5 space-y-4'>
-                      <h3 className='text-lg font-semibold text-white'>
+                    className='bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-4'>
+                      <h3 className='text-lg font-semibold text-slate-900 dark:text-white'>
                         Resume Analysis Result
                       </h3>
 
                       {projects.length > 0 && (
                         <div>
-                          <p className='font-semibold text-slate-200 mb-2'>
+                          <p className='font-semibold text-slate-700 dark:text-slate-200 mb-2'>
                             Projects:
                           </p>
 
-                          <ul className='list-disc list-inside text-slate-300 space-y-1 text-sm'>
+                          <ul className='list-disc list-inside text-slate-600 dark:text-slate-300 space-y-1 text-sm'>
                             {projects.map((pro, idx)=>(
                               <li key={idx}>{pro}</li>
                             ))}
@@ -196,13 +195,13 @@ const Step1SetUp = ({onStart}) => {
 
                       {skills.length > 0 && (
                         <div>
-                          <p className='font-semibold text-slate-200 mb-2'>
+                          <p className='font-semibold text-slate-700 dark:text-slate-200 mb-2'>
                             Skills:
                           </p>
 
                           <div className='flex flex-wrap gap-2'>
                             {skills.map((ski, idx)=>(
-                              <span key={idx} className='bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-sm font-medium'>{ski}</span>
+                              <span key={idx} className='bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 px-3 py-1 rounded-full text-sm font-medium'>{ski}</span>
                             ))}
                           </div>
                         </div>
@@ -215,7 +214,7 @@ const Step1SetUp = ({onStart}) => {
                   disabled={ !role || !experience || loading }
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: .96 }}
-                  className='w-full disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-full text-lg font-semibold transition duration-300 shadow-lg shadow-emerald-950/50 cursor-pointer'>
+                  className='w-full disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-full text-lg font-semibold transition duration-300 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50 cursor-pointer'>
                     {loading ? "Starting..." : "Start Interview"}
                 </motion.button>
               </div>

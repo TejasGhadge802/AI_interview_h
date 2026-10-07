@@ -28,8 +28,8 @@ const InterviewReport = () => {
 
   if(!report){
     return(
-      <div className='min-h-screen bg-[#0f172a] text-slate-100 flex items-center justify-center'>
-        <p className='text-slate-300 text-lg'>Loading Report...</p>
+      <div className='min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 flex items-center justify-center transition-colors duration-200'>
+        <p className='text-slate-600 dark:text-slate-300 text-lg'>Loading Report...</p>
       </div>
     )
   }

@@ -108,20 +108,20 @@ const Pricing = () => {
 
 
   return (
-    <div className='min-h-screen bg-[#0f172a] text-slate-100 py-16 px-6'>
+    <div className='min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 py-16 px-6 transition-colors duration-200'>
 
       <div className='max-w-6xl mx-auto mb-20 flex items-start gap-4'>
         
-        <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white transition shadow-sm cursor-pointer'>
+        <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition shadow-xs cursor-pointer'>
           <FaArrowLeft />
         </button>
 
         <div className='text-center w-full'>
-          <h1 className='text-3xl sm:text-4xl font-bold text-white'>
+          <h1 className='text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white'>
             Choose Your Plan
           </h1>
 
-          <p className='text-slate-300 mt-3 text-base sm:text-lg'>
+          <p className='text-slate-600 dark:text-slate-300 mt-3 text-base sm:text-lg'>
             Select the perfect plan for your interview preparation needs.
           </p>
         </div>
@@ -137,40 +137,40 @@ const Pricing = () => {
               key={p.id}
               whileHover={!p.default && { y: -5, scale: 1.02 }}
               onClick={() => !p.default && setSelectedPlan(p.id)}
-              className={`relative bg-[#1e293b] rounded-2xl shadow-xl p-6 border-2 transition-all 
+              className={`relative bg-white dark:bg-[#1e293b] rounded-2xl shadow-md dark:shadow-xl p-6 border-2 transition-all 
               ${
                 isSelected ? 
                 'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.25)]' : 
-                'border-slate-700 hover:border-slate-600'
+                'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
               }
               ${p.default ? 'cursor-default opacity-90' : 'cursor-pointer'}
               `}
             >
               {p.default && (
-                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-slate-200 bg-slate-700 border border-slate-600 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider'>
+                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider'>
                   Default
                 </span>
               )}
               {p.badge && (
-                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider'>
+                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider'>
                   {p.badge}
                 </span>
               )}
 
               
-              <h3 className='text-xl font-bold text-white mt-4'>{p.name}</h3>
+              <h3 className='text-xl font-bold text-slate-900 dark:text-white mt-4'>{p.name}</h3>
               <span className='flex items-center justify-between gap-3 mt-3'>
-                <p className='text-3xl font-bold text-emerald-400'>{p.price}</p>
-                <p className='text-emerald-300 font-medium flex items-center gap-1.5 text-sm'>
-                  {p.credits} Credits <BsCoin size={16} className='text-amber-400'/>
+                <p className='text-3xl font-bold text-emerald-600 dark:text-emerald-400'>{p.price}</p>
+                <p className='text-emerald-700 dark:text-emerald-300 font-medium flex items-center gap-1.5 text-sm'>
+                  {p.credits} Credits <BsCoin size={16} className='text-amber-500 dark:text-amber-400'/>
                 </p>
               </span>
-              <p className='text-slate-300 mt-3 text-sm leading-relaxed'>{p.description}</p>
+              <p className='text-slate-600 dark:text-slate-300 mt-3 text-sm leading-relaxed'>{p.description}</p>
               <ul className='mt-6 space-y-3'>
                 {p.features.map((feature, index) => (
-                  <li key={index} className='flex items-center text-sm text-slate-200'>
+                  <li key={index} className='flex items-center text-sm text-slate-700 dark:text-slate-200'>
                     <svg
-                      className="w-5 h-5 bg-emerald-500/20 text-emerald-400 rounded-full p-1 mr-3 shrink-0"
+                      className="w-5 h-5 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-full p-1 mr-3 shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -203,8 +203,8 @@ const Pricing = () => {
                 className={`w-full mt-8 py-3 rounded-xl font-semibold transition cursor-pointer 
                   ${
                     isSelected ?
-                    "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-950/50" :
-                    "bg-slate-700/80 text-slate-200 hover:bg-slate-700 border border-slate-600"
+                    "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50" :
+                    "bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600"
                   }`}>
                   {
                     loadingPlan === p.id ? 

@@ -8,7 +8,7 @@ const InterviewPage = () => {
   const [interviewData, setInterviewData] = useState(null)
 
   return (
-    <div className='min-h-screen bg-[#0f172a] text-slate-100'>
+    <div className='min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 transition-colors duration-200'>
         {step === 1 && (
             <Step1SetUp onStart={(data)=>{
                 setInterviewData(data)
