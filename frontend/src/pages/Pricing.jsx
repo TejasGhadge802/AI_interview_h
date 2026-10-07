@@ -143,7 +143,7 @@ const Pricing = () => {
                 'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.25)]' : 
                 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
               }
-              ${p.default ? 'cursor-default opacity-90' : 'cursor-pointer'}
+              ${p.default ? 'cursor-not-allowed opacity-90' : 'cursor-pointer'}
               `}
             >
               {p.default && (
