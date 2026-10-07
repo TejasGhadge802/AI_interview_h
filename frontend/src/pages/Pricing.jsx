@@ -22,7 +22,7 @@ const Pricing = () => {
       name: "Free",
       price: "₹0",
       credits: 100,
-      description: "Perfect for begineers starting interview preparation.",
+      description: "Perfect for beginners starting interview preparation.",
       features: [
         "100 AI Interview Credits",
         "Basic Performance Report",
@@ -88,7 +88,7 @@ const Pricing = () => {
 
           dispatch(setUserData(verifyPayment.data.user))
 
-          alert("Payment Succesful.")
+          alert("Payment Successful.")
           navigate("/");
         },
         theme: {
@@ -96,33 +96,32 @@ const Pricing = () => {
         },
       }
 
-
-      // TO OPEM RAZORPAY WINDOW
       const razpay = new window.Razorpay(options);
       razpay.open();
       
       setLoadingPlan(null);
     } catch (err) {
       console.log(err);
+      setLoadingPlan(null);
     }
   }
 
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-gray-50 to-emerald-50 py-16 px-6'>
+    <div className='min-h-screen bg-[#0f172a] text-slate-100 py-16 px-6'>
 
-      <div className='max-w-6xl mx-auto mb-30 flex items-start gap-4'>
+      <div className='max-w-6xl mx-auto mb-20 flex items-start gap-4'>
         
-        <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-white shadow hover:shadow-md transition'>
-          <FaArrowLeft className='text-gray-600 '/>
+        <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white transition shadow-sm cursor-pointer'>
+          <FaArrowLeft />
         </button>
 
         <div className='text-center w-full'>
-          <h1 className='text-4xl font-bold text-gray-800'>
+          <h1 className='text-3xl sm:text-4xl font-bold text-white'>
             Choose Your Plan
           </h1>
 
-          <p className='text-gray-500 mt-3 text-lg'>
+          <p className='text-slate-300 mt-3 text-base sm:text-lg'>
             Select the perfect plan for your interview preparation needs.
           </p>
         </div>
@@ -136,44 +135,44 @@ const Pricing = () => {
           return(
             <motion.div
               key={p.id}
-              whileHover={!p.default && { y: -5, scale: 1.05 }}
+              whileHover={!p.default && { y: -5, scale: 1.02 }}
               onClick={() => !p.default && setSelectedPlan(p.id)}
-              className={`relative bg-white rounded-xl shadow-lg p-6 border-2 
+              className={`relative bg-[#1e293b] rounded-2xl shadow-xl p-6 border-2 transition-all 
               ${
                 isSelected ? 
-                'border-emerald-500 shadow-2xl bg-white' : 
-                'border-transparent shadow-2xl bg-white'
+                'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.25)]' : 
+                'border-slate-700 hover:border-slate-600'
               }
-              ${p.default ? 'cursor-not-allowed' : 'cursor-pointer'}
+              ${p.default ? 'cursor-default opacity-90' : 'cursor-pointer'}
               `}
             >
               {p.default && (
-                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-100 bg-gray-800 text-sm font-bold px-3 py-1 rounded-full'>
+                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-slate-200 bg-slate-700 border border-slate-600 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider'>
                   Default
                 </span>
               )}
               {p.badge && (
-                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-100 bg-emerald-800 text-sm font-bold px-3 py-1 rounded-full'>
+                <span className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider'>
                   {p.badge}
                 </span>
               )}
 
               
-              <h3 className='text-xl font-bold text-gray-800 mt-4'>{p.name}</h3>
+              <h3 className='text-xl font-bold text-white mt-4'>{p.name}</h3>
               <span className='flex items-center justify-between gap-3 mt-3'>
-                <p className='text-3xl font-bold text-emerald-500'>{p.price}</p>
-                <p className='text-emerald-800 mt-2 font-medium flex items-center gap-2'>
-                  {p.credits} AI Interview<BsCoin size={18}/>Credits
+                <p className='text-3xl font-bold text-emerald-400'>{p.price}</p>
+                <p className='text-emerald-300 font-medium flex items-center gap-1.5 text-sm'>
+                  {p.credits} Credits <BsCoin size={16} className='text-amber-400'/>
                 </p>
               </span>
-              <p className='text-gray-500 mt-2'>{p.description}</p>
-              <ul className='mt-4 space-y-2'>
+              <p className='text-slate-300 mt-3 text-sm leading-relaxed'>{p.description}</p>
+              <ul className='mt-6 space-y-3'>
                 {p.features.map((feature, index) => (
-                  <li key={index} className='flex items-center'>
+                  <li key={index} className='flex items-center text-sm text-slate-200'>
                     <svg
-                      className="w-5 h-5 bg-green-500 rounded-full p-1 mr-2"
+                      className="w-5 h-5 bg-emerald-500/20 text-emerald-400 rounded-full p-1 mr-3 shrink-0"
                       fill="none"
-                      stroke="white"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -201,17 +200,17 @@ const Pricing = () => {
                     handelPayment(p)
                   }
                 }}
-                className={`w-full mt-8 py-3 rounded-xl font-semibold transition 
+                className={`w-full mt-8 py-3 rounded-xl font-semibold transition cursor-pointer 
                   ${
                     isSelected ?
-                    "bg-emerald-600 text-white hover:opacity-90" :
-                    "bg-gray-100 text-gray-700 hover:bg-emerald-100"
+                    "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-950/50" :
+                    "bg-slate-700/80 text-slate-200 hover:bg-slate-700 border border-slate-600"
                   }`}>
                   {
                     loadingPlan === p.id ? 
                     "Processing..." :
                     isSelected ?
-                    "Process To Pay" :
+                    "Proceed To Pay" :
                     "Select Plan"
                   }
                 </button>

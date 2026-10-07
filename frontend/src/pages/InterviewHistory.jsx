@@ -26,19 +26,19 @@ const InterviewHistory = () => {
     }, []);
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-gray-50 to-emerald-50 py-10'>
+    <div className='min-h-screen bg-[#0f172a] text-slate-100 py-10'>
         <div className='w-[90vw] lg:w-[70vw] max-w-[90%] mx-auto'>
 
             <div className='mb-10 w-full flex items-start gap-4 flex-wrap'>
                 <button onClick={() => navigate("/")}
-                className='mt-1 p-3 rounded-full bg-white shadow hover:shadow-md transition'><FaArrowLeft className='text-gray-600' /></button>
+                className='mt-1 p-3 rounded-full bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white transition shadow-sm cursor-pointer'><FaArrowLeft /></button>
 
                 <div>
-                    <h1 className='text-3xl font-bold text-gray-800'>
+                    <h1 className='text-3xl font-bold text-white'>
                         Interview History
                     </h1>
 
-                    <p className='text-gray-500 mt-2'>
+                    <p className='text-slate-300 mt-2'>
                         Review your past interviews and performance.
                     </p>
                 </div>
@@ -48,8 +48,8 @@ const InterviewHistory = () => {
 
 
             { interviews.length === 0 ?
-                <div className='bg-white p-10 rounded-2xl shadow text-center'>
-                    <p className='text-gray-600'>
+                <div className='bg-[#1e293b] p-10 rounded-2xl border border-slate-700 shadow-lg text-center'>
+                    <p className='text-slate-300'>
                         You haven't participated in any interviews yet. Start your first interview to see your history here!
                     </p>
                 </div>
@@ -58,22 +58,22 @@ const InterviewHistory = () => {
                     {interviews.map((item) => (
                         <div key={item._id} 
                         onClick={()=>navigate(`/report/${item._id}`)}
-                        className='bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100'>
+                        className='bg-[#1e293b] p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-slate-700 hover:border-emerald-500/40'>
 
                             <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
 
-                                <div className=''>
-                                    <h3 className='text-lg font-semibold text-gray-800'>
+                                <div>
+                                    <h3 className='text-lg font-semibold text-white'>
                                         {item.role.charAt(0).toUpperCase() + item.role.slice(1)}
                                     </h3>
 
-                                    <p className='text-gray-500 text-sm mt-1'>
+                                    <p className='text-slate-300 text-sm mt-1'>
                                         {item.experience.charAt(0).toUpperCase() + item.experience.slice(1)} 
-                                        <span className="mx-3">|</span>
+                                        <span className="mx-3 text-slate-500">|</span>
                                         {item.mode.charAt(0).toUpperCase() + item.mode.slice(1)}
                                     </p>
 
-                                    <p className='text-sm text-gray-400 mt-2'>
+                                    <p className='text-sm text-slate-400 mt-2'>
                                         {
                                             new Date(item.createdAt).toLocaleDateString("en-IN", {
                                                 day: "2-digit",
@@ -92,11 +92,11 @@ const InterviewHistory = () => {
 
                                     {/* SCORE */}
                                     <div className='text-right'>
-                                        <p className='text-xl font-bold text-emerald-600'>
+                                        <p className='text-xl font-bold text-emerald-400'>
                                             {Number(item.finalScore) ?? 5}/10
                                         </p>
 
-                                        <p className='text-xs text-gray-400'>
+                                        <p className='text-xs text-slate-400'>
                                             Overall Score
                                         </p>
                                     </div>
@@ -104,10 +104,10 @@ const InterviewHistory = () => {
 
                                     {/* STATUS BADGE */}
                                     <span 
-                                        className={`px-4 py-1 rounded-full text-xs font-medium ${
+                                        className={`px-4 py-1 rounded-full text-xs font-semibold ${
                                             item.status?.toLowerCase() === "completed"
-                                            ? "bg-emerald-100 text-emerald-700"
-                                            : "bg-yellow-100 text-yellow-700"
+                                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                            : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
                                         }`}
                                     >
                                         {

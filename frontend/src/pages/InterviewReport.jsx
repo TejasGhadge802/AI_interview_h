@@ -24,13 +24,12 @@ const InterviewReport = () => {
     }
 
     fetchReport()
-  }, [])
-
+  }, [id])
 
   if(!report){
     return(
-      <div className='min-h-screen flex items-center justify-center'>
-        <p className='text-gray-500 text-lg'>Loading Report...</p>
+      <div className='min-h-screen bg-[#0f172a] text-slate-100 flex items-center justify-center'>
+        <p className='text-slate-300 text-lg'>Loading Report...</p>
       </div>
     )
   }

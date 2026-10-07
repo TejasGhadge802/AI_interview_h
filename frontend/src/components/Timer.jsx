@@ -13,8 +13,8 @@ const Timer = ({ timeLeft, totalTime }) => {
             styles={buildStyles({
                 textSize : "28px",
                 pathColor: "#10b981",
-                textColor: "#ef4444",
-                trailColor: "#e5e7eb",
+                textColor: "#f87171",
+                trailColor: "#334155",
             })}
         />
     </div>

@@ -30,38 +30,38 @@ const Auth = ({isModel = false}) => {
 
 
   return (
-    <div className={`w-full ${isModel ? "py-4": "min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20"}`}>
+    <div className={`w-full ${isModel ? "py-4": "min-h-screen bg-[#0f172a] text-slate-100 flex items-center justify-center px-6 py-20"}`}>
         <motion.div 
-        initial={{ opacity: 0, scale: 0.5 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
-        className={`w-full ${isModel ? "max-w-md p-8 rounded-3xl": "max-w-lg p-12 rounded-[32px]"} bg-white shadow-2xl border border-gray-200`}>
-            <div className='flex item-center justify-center gap-3 mb-6'>
-                <div className='bg-black text-white p-2 rounded-lg'>
-                    <FaRobot size={15}/>
+        className={`w-full ${isModel ? "max-w-md p-8 rounded-3xl": "max-w-lg p-12 rounded-[32px]"} bg-[#1e293b] text-white shadow-2xl border border-slate-700/80`}>
+            <div className='flex items-center justify-center gap-3 mb-6'>
+                <div className='bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 p-2 rounded-lg'>
+                    <FaRobot size={18}/>
                 </div>
-                <h2 className='font-semibold text-lg'>AI Interview</h2>
+                <h2 className='font-semibold text-lg text-white'>AI Interview</h2>
             </div>
 
-            <h1 className='text-2xl md:text-3xl font-semibold text-center leading-snug mb-5'>
+            <h1 className='text-2xl md:text-3xl font-semibold text-center leading-snug mb-5 text-white'>
                 Continue with 
-                <span className='bg-green-100 text-green-600 px-6 py-2 rounded-full inline-flex items-center gap-2 mt-2'>
+                <span className='bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-6 py-2 rounded-full inline-flex items-center gap-2 mt-2'>
                     <FaWandMagicSparkles /> AI Interview
                 </span>
             </h1>
 
-            <p className='text-gay-500 text-center etxt-sm md:text-base leading-relaxed mb-8'>
+            <p className='text-slate-300 text-center text-sm md:text-base leading-relaxed mb-8'>
                 Sign in to start AI-Mock Interview
             </p>
 
             <motion.button
             onClick={ handleGoogleAuth }
-            whileHover={{ scale: 1.05, opacity: 0.9 }}
-            whileTap={{ scale: 0.95 }}
-            className='w-full flex items-center justify-center gap-1 py-3 bg-black text-white rounded-full shadow-md'
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            className='w-full flex items-center justify-center gap-2 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-full border border-slate-600 shadow-lg cursor-pointer transition font-medium'
             >
-                Continue with
-                <FcGoogle size={25}/>
+                <span>Continue with</span>
+                <FcGoogle size={24}/>
             </motion.button>
         </motion.div>
     </div>
