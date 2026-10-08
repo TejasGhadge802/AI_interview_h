@@ -1,8 +1,8 @@
-import React,{ useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'motion/react'
-import { BsCoin } from 'react-icons/bs'
+import { motion, AnimatePresence } from 'motion/react'
+import { BsCoin, BsInfoCircle } from 'react-icons/bs'
 import axios from 'axios'
 import { ServerUrl } from '../App'
 import { useDispatch } from 'react-redux'
@@ -12,6 +12,15 @@ const Pricing = () => {
 
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState("free");
+  const [showTestNotice, setShowTestNotice] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTestNotice(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const [loadingPlan, setLoadingPlan] = useState(null);
   const dispatch = useDispatch()
@@ -108,7 +117,58 @@ const Pricing = () => {
 
 
   return (
-    <div className='min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 py-16 px-6 transition-colors duration-200'>
+    <div className='relative min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 py-16 px-6 transition-colors duration-200'>
+
+      {/* 3-SECOND TEST MODE POP-UP */}
+      <AnimatePresence>
+        {showTestNotice && (
+          <div className='fixed inset-x-0 top-6 z-50 flex justify-center px-4 pointer-events-none'>
+            <motion.div
+              initial={{ opacity: 0, y: -30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className='pointer-events-auto relative w-full max-w-lg bg-white/95 dark:bg-[#1e293b]/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border-2 border-emerald-500 text-slate-800 dark:text-slate-100 shadow-[0_10px_35px_rgba(16,185,129,0.25)]'
+            >
+              <div className='flex items-start gap-3.5'>
+                <div className='w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0'>
+                  <BsInfoCircle size={22} />
+                </div>
+                <div className='flex-1 pr-4'>
+                  <div className='flex items-center gap-2 mb-1'>
+                    <h3 className='font-bold text-base text-slate-900 dark:text-white'>
+                      Payment Test Mode
+                    </h3>
+                    <span className='px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40'>
+                      Notice
+                    </span>
+                  </div>
+                  <p className='text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed'>
+                    This payment feature is currently in <strong>test mode</strong>. You can pay via any method without mentioning or entering your real bank details.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowTestNotice(false)}
+                  className='text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl p-1 cursor-pointer transition leading-none'
+                  aria-label='Close test mode notice'
+                >
+                  &times;
+                </button>
+              </div>
+
+              {/* 3-Second countdown progress bar */}
+              <div className='mt-3.5 w-full bg-slate-100 dark:bg-slate-700/60 h-1.5 rounded-full overflow-hidden'>
+                <motion.div
+                  initial={{ width: "100%" }}
+                  animate={{ width: "0%" }}
+                  transition={{ duration: 8 , ease: "linear" }}
+                  className='h-full bg-emerald-500 rounded-full'
+                />
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <div className='max-w-6xl mx-auto mb-20 flex items-start gap-4'>
         
