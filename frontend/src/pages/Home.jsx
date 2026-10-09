@@ -2,12 +2,13 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import { motion } from 'motion/react'
 import { useSelector } from 'react-redux'
-import { BsRobot, BsMic, BsClock, BsBarChart, BsFileEarmarkText, BsCameraVideo, BsShieldCheck } from 'react-icons/bs'
+import { BsMic, BsClock, BsBarChart, BsFileEarmarkText, BsCameraVideo, BsShieldCheck } from 'react-icons/bs'
 import { HiSparkles } from 'react-icons/hi'
 import { FaVideo } from 'react-icons/fa'
 import { useState } from 'react' 
 import { useNavigate } from 'react-router-dom'
 import AuthModel from '../components/AuthModel'
+import Logo from '../components/Logo'
 import { useTheme } from '../context/ThemeContext'
 {/* hr img */} import img1 from "../assets/img1.jpg"     
 {/* tech img */} import img2 from "../assets/img2.jpg"     
@@ -34,8 +35,8 @@ const Home = () => {
         <div className='max-w-6xl mx-auto'>
 
         <div className='flex justify-center mb-6'>
-          <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-xs">
-          <HiSparkles className='text-emerald-600 dark:text-emerald-400' size={16}/>
+          <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm px-4 py-2 rounded-full flex items-center gap-2.5 shadow-xs">
+          <Logo className='text-emerald-600 dark:text-emerald-400' size={18}/>
 
             {`Practice Like It's the Real Interview`.split(" ").map((w, i) => (
               <motion.span 
@@ -106,7 +107,7 @@ const Home = () => {
           {
             [
               {
-                icon: <BsRobot size={24}/>,
+                icon: <Logo size={28}/>,
                 step: "STEP: 1",
                 title: "Role & Experience Selection",
                 desc: "AI adjusts difficulty based on selected job role.",

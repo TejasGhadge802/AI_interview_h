@@ -128,7 +128,7 @@ const Pricing = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className='pointer-events-auto relative w-full max-w-lg bg-white/95 dark:bg-[#1e293b]/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border-2 border-emerald-500 text-slate-800 dark:text-slate-100 shadow-[0_10px_35px_rgba(16,185,129,0.25)]'
+              className='pointer-events-auto relative w-full max-w-lg bg-white/95 dark:bg-[#1e293b]/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border-2 border-emerald-500 text-slate-800 dark:text-slate-100'
             >
               <div className='flex items-start gap-3.5'>
                 <div className='w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0'>

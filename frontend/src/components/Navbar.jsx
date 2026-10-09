@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion } from "motion/react"
-import { BsRobot, BsCoin, BsSun, BsMoon } from "react-icons/bs"
+import { BsCoin, BsSun, BsMoon } from "react-icons/bs"
 import { HiOutlineLogout } from "react-icons/hi"
 import { FaUserAstronaut } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +10,7 @@ import { ServerUrl } from '../App'
 import { setUserData } from '../redux/userSlice'
 import AuthModel from './AuthModel'
 import { useTheme } from '../context/ThemeContext'
+import Logo from './Logo'
 
 const Navbar = () => {
     const { userData } = useSelector((state) => state.user)
@@ -43,7 +44,7 @@ const Navbar = () => {
         className='w-full max-w-6xl bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white rounded-[3xl] shadow-md dark:shadow-lg border border-slate-200 dark:border-slate-700/80 px-6 sm:px-8 py-4 flex justify-between items-center relative transition-colors duration-200'>
             <div onClick={()=>navigate("/")} className='flex items-center gap-3 cursor-pointer'>
                 <div className='bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 p-2 rounded-lg transition-colors'>
-                    <BsRobot size={18}/>
+                    <Logo size={20}/>
                 </div>
                 <h1 className='font-semibold hidden md:block text-lg text-slate-900 dark:text-white'>AI Interview</h1>
             </div>

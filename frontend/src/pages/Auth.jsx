@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaRobot, FaWandMagicSparkles } from "react-icons/fa6"
+import { FaWandMagicSparkles } from "react-icons/fa6"
 import { FcGoogle } from "react-icons/fc"
 import { motion } from "motion/react"
 import { signInWithPopup } from 'firebase/auth'
@@ -8,6 +8,7 @@ import axios from "axios"
 import { ServerUrl } from '../App'
 import { useDispatch } from 'react-redux'
 import { setUserData } from '../redux/userSlice'
+import Logo from '../components/Logo'
 
 const Auth = ({isModel = false}) => {
 
@@ -35,10 +36,10 @@ const Auth = ({isModel = false}) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
-        className={`w-full ${isModel ? "max-w-md p-8 rounded-3xl": "max-w-lg p-12 rounded-[32px]"} bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/80`}>
+        className={`w-full ${isModel ? "max-w-md p-8 rounded-3xl": "max-w-lg p-12 rounded-4xl"} bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/80`}>
             <div className='flex items-center justify-center gap-3 mb-6'>
                 <div className='bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 p-2 rounded-lg'>
-                    <FaRobot size={18}/>
+                    <Logo size={20}/>
                 </div>
                 <h2 className='font-semibold text-lg text-slate-900 dark:text-white'>AI Interview</h2>
             </div>

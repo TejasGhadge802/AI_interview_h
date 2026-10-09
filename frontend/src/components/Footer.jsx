@@ -1,5 +1,5 @@
 import React from 'react'
-import { BsRobot } from 'react-icons/bs'
+import Logo from './Logo'
 
 const Footer = () => {
   return (
@@ -7,7 +7,7 @@ const Footer = () => {
         <div className='w-full max-w-6xl bg-white dark:bg-[#1e293b] rounded-[24px] shadow-sm dark:shadow-lg border border-slate-200 dark:border-slate-700/80 py-8 px-4 text-center text-slate-800 dark:text-white transition-colors duration-200'>
             <div className='flex justify-center items-center gap-3 mb-3'>
                 <div className='bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 p-2 rounded-lg'>
-                  <BsRobot size={16}/>
+                  <Logo size={18}/>
                 </div>
                 <h2 className='font-semibold text-lg text-slate-900 dark:text-white'>AI Interview</h2>
             </div>

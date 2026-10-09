@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="14" fill="url(#bgGrad)" />
+  <rect x="0.75" y="0.75" width="46.5" height="46.5" rx="13.25" stroke="#34D399" stroke-opacity="0.5" stroke-width="1.5" />
+  
+  <!-- Headset band -->
+  <path d="M11 25C11 17.82 16.82 12 24 12C31.18 12 37 17.82 37 25" stroke="#FFFFFF" stroke-width="2.75" stroke-linecap="round" />
+  <!-- Ear cups -->
+  <rect x="9.5" y="22.5" width="3" height="7.5" rx="1.5" fill="#FFFFFF" />
+  <rect x="35.5" y="22.5" width="3" height="7.5" rx="1.5" fill="#FFFFFF" />
+  <!-- Mic Boom -->
+  <path d="M11 28C11 33 15 36.5 20.5 36.5H21.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" />
+  <circle cx="23" cy="36.5" r="1.8" fill="#34D399" />
+  
+  <!-- Head Shell -->
+  <rect x="14.5" y="18" width="19" height="15.5" rx="4.5" fill="#064E3B" fill-opacity="0.45" stroke="#FFFFFF" stroke-width="2.5" />
+  
+  <!-- Eyes -->
+  <circle cx="19.5" cy="24" r="1.8" fill="#34D399" />
+  <circle cx="28.5" cy="24" r="1.8" fill="#34D399" />
+  
+  <!-- Voice Waveform mouth -->
+  <path d="M21 29.5V29.5M24 28V31M27 29.5V29.5" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+  
+  <!-- Antenna spark -->
+  <path d="M24 14V10.5M22.5 12H25.5" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" />
+</svg>
+
