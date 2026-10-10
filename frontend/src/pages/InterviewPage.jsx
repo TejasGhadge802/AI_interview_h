@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Step1SetUp from '../components/Step1SetUp'
 import Step2Interview from '../components/Step2Interview'
+import Step2VideoInterview from '../components/Step2VideoInterview'
 import Step3Report from '../components/Step3Report'
 
 const InterviewPage = () => {
@@ -17,12 +18,23 @@ const InterviewPage = () => {
         )}
 
         {step === 2 && (
-            <Step2Interview interviewData={interviewData}
-            onFinish={(report)=>{
-                setInterviewData(report)
-                setStep(3)         
-            }}
-            />
+            interviewData?.interviewType === "video" ? (
+              <Step2VideoInterview
+                interviewData={interviewData}
+                onFinish={(report)=>{
+                    setInterviewData(report)
+                    setStep(3)         
+                }}
+              />
+            ) : (
+              <Step2Interview
+                interviewData={interviewData}
+                onFinish={(report)=>{
+                    setInterviewData(report)
+                    setStep(3)         
+                }}
+              />
+            )
         )}
 
         {step === 3 && (

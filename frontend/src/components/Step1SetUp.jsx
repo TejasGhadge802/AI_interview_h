@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {motion} from "motion/react"
-import { FaUserTie, FaBriefcase, FaFileUpload, FaMicrophoneAlt, FaChartLine } from 'react-icons/fa'
+import { FaUserTie, FaBriefcase, FaFileUpload, FaMicrophoneAlt, FaChartLine, FaVideo } from 'react-icons/fa'
 import axios from "axios"
 import { ServerUrl } from '../App'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,6 +13,7 @@ const Step1SetUp = ({onStart}) => {
   const [role, setRole] = useState("");
   const [experience, setExperience] = useState("");
   const [mode, setMode] = useState("Technical");
+  const [interviewType, setInterviewType] = useState("audio");
 
   const [resumeFile, setResumeFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -59,7 +60,7 @@ const Step1SetUp = ({onStart}) => {
       }
       setLoading(false)
 
-      onStart(result.data)
+      onStart({ ...result.data, interviewType })
     } catch (err) {
       console.error(`Handel Start Error: ${err}`)
       setLoading(false)
@@ -96,8 +97,8 @@ const Step1SetUp = ({onStart}) => {
                       text: "Choose Role & Experience",
                     },
                     {
-                      icon: <FaMicrophoneAlt className='text-emerald-600 dark:text-emerald-400 text-xl' />,
-                      text: "Start Voice Interview",
+                      icon: <FaVideo className='text-emerald-600 dark:text-emerald-400 text-xl' />,
+                      text: "Audio or Audio & Video Mode",
                     },
                     {
                       icon: <FaChartLine className='text-emerald-600 dark:text-emerald-400 text-xl' />,
@@ -143,6 +144,55 @@ const Step1SetUp = ({onStart}) => {
                   <option className='bg-white dark:bg-slate-900 text-slate-800 dark:text-white' value="Technical">Technical Interview</option>
                   <option className='bg-white dark:bg-slate-900 text-slate-800 dark:text-white' value="HR">HR Interview</option>
                 </select>
+
+                {/* Interview Format Selector: Audio vs Audio & Video */}
+                <div>
+                  <label className='block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5'>
+                    Select Interview Format
+                  </label>
+                  <div className='grid grid-cols-2 gap-3'>
+                    <div
+                      onClick={() => setInterviewType("audio")}
+                      className={`p-3.5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col items-center text-center gap-1.5 ${
+                        interviewType === "audio"
+                          ? "border-emerald-500 bg-emerald-50/70 dark:bg-emerald-500/15 shadow-sm shadow-emerald-500/10"
+                          : "border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-600"
+                      }`}
+                    >
+                      <div className={`p-2.5 rounded-xl transition-colors ${
+                        interviewType === "audio" 
+                          ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/30" 
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                      }`}>
+                        <FaMicrophoneAlt size={18} />
+                      </div>
+                      <span className='font-semibold text-sm text-slate-900 dark:text-white'>Audio Only</span>
+                      <span className='text-[11px] text-slate-500 dark:text-slate-400 leading-tight'>Voice Interview</span>
+                    </div>
+
+                    <div
+                      onClick={() => setInterviewType("video")}
+                      className={`p-3.5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col items-center text-center gap-1.5 relative overflow-hidden ${
+                        interviewType === "video"
+                          ? "border-emerald-500 bg-emerald-50/70 dark:bg-emerald-500/15 shadow-sm shadow-emerald-500/10"
+                          : "border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-600"
+                      }`}
+                    >
+                      <span className='absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-xs'>
+                        Live
+                      </span>
+                      <div className={`p-2.5 rounded-xl transition-colors ${
+                        interviewType === "video" 
+                          ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/30" 
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                      }`}>
+                        <FaVideo size={18} />
+                      </div>
+                      <span className='font-semibold text-sm text-slate-900 dark:text-white'>Audio & Video</span>
+                      <span className='text-[11px] text-slate-500 dark:text-slate-400 leading-tight'>Webcam + AI Tracking</span>
+                    </div>
+                  </div>
+                </div>
 
 
                 {!analysisDone && (
