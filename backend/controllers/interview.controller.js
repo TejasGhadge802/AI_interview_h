@@ -68,11 +68,12 @@ export const analyzeResume = async (req, res) => {
 
 export const generateQuestion = async (req, res) => {
   try {
-    let { role, experience, mode, resumeText, projects, skills } = req.body;
+    let { role, experience, mode, resumeText, projects, skills, interviewType } = req.body;
 
     role = role?.trim();
     experience = experience?.trim();
     mode = mode?.trim();
+    interviewType = interviewType === "video" ? "video" : "audio";
 
     if (!role || !experience || !mode) {
       return res.status(400).json({
@@ -88,9 +89,11 @@ export const generateQuestion = async (req, res) => {
       });
     }
 
-    if (user.credits < 50) {
+    const requiredCredits = interviewType === "video" ? 80 : 50;
+
+    if (user.credits < requiredCredits) {
       return res.status(400).json({
-        message: `Not enough credits, Min. 50 required.`,
+        message: `Not enough credits, Min. ${requiredCredits} required.`,
       });
     }
 
@@ -175,7 +178,7 @@ export const generateQuestion = async (req, res) => {
       });
     }
 
-    user.credits -= 50;               
+    user.credits -= requiredCredits;               
     await user.save();
 
     const interview = await Interview.create({
@@ -183,6 +186,7 @@ export const generateQuestion = async (req, res) => {
       role,
       experience,
       mode,
+      interviewType,
       resumeText: safeResume,
       questions: questionsArray.map((q, idx) => ({
         question: q,

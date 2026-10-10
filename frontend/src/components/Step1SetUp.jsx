@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import {motion} from "motion/react"
 import { FaUserTie, FaBriefcase, FaFileUpload, FaMicrophoneAlt, FaChartLine, FaVideo } from 'react-icons/fa'
+import { BsCoin } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
 import axios from "axios"
 import { ServerUrl } from '../App'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,11 +11,13 @@ import { setUserData } from '../redux/userSlice'
 const Step1SetUp = ({onStart}) => {
   const {userData} = useSelector((state)=>state.user)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [role, setRole] = useState("");
   const [experience, setExperience] = useState("");
   const [mode, setMode] = useState("Technical");
   const [interviewType, setInterviewType] = useState("audio");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [resumeFile, setResumeFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,6 +26,8 @@ const Step1SetUp = ({onStart}) => {
   const [resumeText, setResumeText] = useState("");
   const [analysisDone, setAnalysisDone] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+
+  const requiredCredits = interviewType === "video" ? 80 : 50;
 
 
   const handleUploadResume = async () => {
@@ -52,8 +58,17 @@ const Step1SetUp = ({onStart}) => {
 
   const handleStart = async (params) => {
     setLoading(true)
+    setErrorMsg("")
     try {
-      const result = await axios.post(ServerUrl + "/api/interview/generate-questions", {role, experience, mode, resumeText, projects, skills}, {withCredentials: true})
+      const result = await axios.post(ServerUrl + "/api/interview/generate-questions", {
+        role, 
+        experience, 
+        mode, 
+        interviewType,
+        resumeText, 
+        projects, 
+        skills
+      }, {withCredentials: true})
 
       if(userData){
         dispatch(setUserData({...userData, credits: result.data.creditsLeft}))
@@ -63,6 +78,7 @@ const Step1SetUp = ({onStart}) => {
       onStart({ ...result.data, interviewType })
     } catch (err) {
       console.error(`Handel Start Error: ${err}`)
+      setErrorMsg(err.response?.data?.message || "Failed to start interview. Please check your credit balance.")
       setLoading(false)
     }
   }
@@ -168,6 +184,9 @@ const Step1SetUp = ({onStart}) => {
                       </div>
                       <span className='font-semibold text-sm text-slate-900 dark:text-white'>Audio Only</span>
                       <span className='text-[11px] text-slate-500 dark:text-slate-400 leading-tight'>Voice Interview</span>
+                      <span className='inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60'>
+                        <BsCoin className='text-amber-500' size={11} /> 50 Coins
+                      </span>
                     </div>
 
                     <div
@@ -190,7 +209,21 @@ const Step1SetUp = ({onStart}) => {
                       </div>
                       <span className='font-semibold text-sm text-slate-900 dark:text-white'>Audio & Video</span>
                       <span className='text-[11px] text-slate-500 dark:text-slate-400 leading-tight'>Webcam + AI Tracking</span>
+                      <span className='inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60'>
+                        <BsCoin className='text-amber-500' size={11} /> 80 Coins
+                      </span>
                     </div>
+                  </div>
+
+                  <div className='flex items-center justify-between text-xs px-1 text-slate-500 dark:text-slate-400 mt-2.5'>
+                    <span className='flex items-center gap-1'>
+                      Interview Cost: <strong className='text-slate-800 dark:text-slate-200 font-semibold'>{requiredCredits} Coins</strong>
+                    </span>
+                    {userData && (
+                      <span className='flex items-center gap-1'>
+                        Your Balance: <strong className={userData.credits < requiredCredits ? 'text-rose-500 font-bold' : 'text-emerald-600 dark:text-emerald-400 font-semibold'}>{userData.credits} Coins</strong>
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -259,13 +292,36 @@ const Step1SetUp = ({onStart}) => {
                   </motion.div>
                 )}
 
+                {userData && userData.credits < requiredCredits && (
+                  <div className='p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between gap-2'>
+                    <span>Insufficient coins for {interviewType === "video" ? "Audio & Video (80 Coins)" : "Audio Only (50 Coins)"}. You need {requiredCredits - (userData.credits || 0)} more coins.</span>
+                    <button 
+                      type="button"
+                      onClick={() => navigate("/pricing")}
+                      className='font-bold underline hover:text-rose-900 dark:hover:text-rose-100 cursor-pointer shrink-0'
+                    >
+                      Recharge &rarr;
+                    </button>
+                  </div>
+                )}
+
+                {errorMsg && (
+                  <div className='p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs'>
+                    {errorMsg}
+                  </div>
+                )}
+
                 <motion.button
                   onClick={handleStart}
-                  disabled={ !role || !experience || loading }
+                  disabled={ !role || !experience || loading || (userData && userData.credits < requiredCredits) }
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: .96 }}
-                  className='w-full disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-full text-lg font-semibold transition duration-300 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50 cursor-pointer'>
-                    {loading ? "Starting..." : "Start Interview"}
+                  className='w-full disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-full text-lg font-semibold transition duration-300 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50 cursor-pointer flex items-center justify-center gap-2'>
+                    {loading 
+                      ? "Starting..." 
+                      : (userData && userData.credits < requiredCredits)
+                        ? `Insufficient Credits (${requiredCredits} Coins Required)`
+                        : `Start Interview (${requiredCredits} Coins)`}
                 </motion.button>
               </div>
           </motion.div>

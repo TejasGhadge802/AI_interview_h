@@ -33,6 +33,11 @@ const interviewSchema = new mongoose.Schema({
         enum: ["HR", "Technical"],
         required: true
     },
+    interviewType: {
+        type: String,
+        enum: ["audio", "video"],
+        default: "audio"
+    },
     resumeText: {
         type: String
     },
