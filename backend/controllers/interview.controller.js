@@ -322,7 +322,7 @@ console.log("finishInterview called");
 console.log(req.body);
 
 
-    const {interviewId} = req.body
+    const {interviewId, eyeContact} = req.body
 
     const interview = await Interview.findById(interviewId)
 
@@ -354,6 +354,9 @@ console.log(req.body);
 
     interview.finalScore = finalScore;
     interview.status = "completed"
+    if (eyeContact !== undefined && eyeContact !== null) {
+      interview.eyeContact = Number(eyeContact);
+    }
 
     await interview.save();
 
@@ -367,6 +370,7 @@ console.log("Status in DB:", updated.status);
       confidence: Number(avgConfidence.toFixed(1)),
       communication: Number(avgCommunication.toFixed(1)),
       correctness: Number(avgCorrectness.toFixed(1)),
+      eyeContact: interview.eyeContact !== undefined && interview.eyeContact !== null ? Number(interview.eyeContact.toFixed(1)) : undefined,
       questionWiseScore: interview.questions.map((q)=> ({
         question: q.question,
         score: q.score || 0,
@@ -433,6 +437,7 @@ export const getInterviewReport = async (req, res) => {
       confidence: Number(avgConfidence.toFixed(1)),
       communication: Number(avgCommunication.toFixed(1)),
       correctness: Number(avgCorrectness.toFixed(1)),
+      eyeContact: interview.eyeContact !== undefined && interview.eyeContact !== null ? Number(interview.eyeContact.toFixed(1)) : undefined,
       questionWiseScore: interview.questions,
     })
 

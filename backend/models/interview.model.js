@@ -41,6 +41,10 @@ const interviewSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    eyeContact: {
+        type: Number,
+        default: 0
+    },
     status: {
         type: String,
         enum: ["Incompleted", "completed"],

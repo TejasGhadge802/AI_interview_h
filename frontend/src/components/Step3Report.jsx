@@ -29,6 +29,7 @@ const Step3Report = ({ report }) => {
     confidence = 0,
     communication = 0,
     correctness = 0,
+    eyeContact = undefined,
     questionWiseScore = [],
   } = report;
 
@@ -41,6 +42,9 @@ const Step3Report = ({ report }) => {
     { label: "confidence", value: Number(confidence) },
     { label: "communication", value: Number(communication) },
     { label: "correctness", value: Number(correctness) },
+    ...(eyeContact !== undefined && eyeContact !== null
+      ? [{ label: "eye contact", value: Number(eyeContact) }]
+      : []),
   ];
 
   let performanceText = "";
@@ -427,11 +431,7 @@ const Step3Report = ({ report }) => {
 
   currentY += 7;
 
-  const skillGap = 5;
-  const skillWidth = (contentWidth - skillGap * 2) / 3;
-  const skillHeight = 28;
-
-  const skills = [
+  const pdfSkills = [
     {
       label: "Confidence",
       value: confidence,
@@ -444,9 +444,17 @@ const Step3Report = ({ report }) => {
       label: "Correctness",
       value: correctness,
     },
+    ...(eyeContact !== undefined && eyeContact !== null
+      ? [{ label: "Eye Contact", value: eyeContact }]
+      : []),
   ];
 
-  skills.forEach((skill, index) => {
+  const skillGap = 4;
+  const numSkills = pdfSkills.length;
+  const skillWidth = (contentWidth - skillGap * (numSkills - 1)) / numSkills;
+  const skillHeight = 28;
+
+  pdfSkills.forEach((skill, index) => {
     const x = margin + index * (skillWidth + skillGap);
 
     doc.setFillColor(...COLORS.background);
@@ -469,7 +477,7 @@ const Step3Report = ({ report }) => {
 
     doc.text(
       skill.label.toUpperCase(),
-      x + 7,
+      x + 5,
       currentY + 9
     );
 
@@ -479,8 +487,8 @@ const Step3Report = ({ report }) => {
     doc.setTextColor(...COLORS.darkGreen);
 
     doc.text(
-      String(skill.value),
-      x + 7,
+      `${skill.value}/10`,
+      x + 5,
       currentY + 19
     );
   });
