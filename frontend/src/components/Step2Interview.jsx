@@ -376,6 +376,42 @@ const Step2Interview = ({interviewData, onFinish}) => {
     }
   }
 
+  // Ctrl + Enter shortcut handlers
+  const submitAnswerRef = useRef(submitAnswer);
+  const handleNextRef = useRef(handleNext);
+  const feedbackRef = useRef(feedback);
+  const isSubmittingRef = useRef(isSubmitting);
+  const answerRef = useRef(answer);
+  const isIntroPhaseRef = useRef(isintroPhase);
+
+  useEffect(() => {
+    submitAnswerRef.current = submitAnswer;
+    handleNextRef.current = handleNext;
+    feedbackRef.current = feedback;
+    isSubmittingRef.current = isSubmitting;
+    answerRef.current = answer;
+    isIntroPhaseRef.current = isintroPhase;
+  });
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        if (isIntroPhaseRef.current) return;
+        if (!feedbackRef.current) {
+          if (!isSubmittingRef.current && answerRef.current?.trim()) {
+            submitAnswerRef.current?.();
+          }
+        } else {
+          handleNextRef.current?.();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   useEffect(()=> {
     if(isintroPhase) return;
     if(!currentQuestion) return;
@@ -527,6 +563,14 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
           <textarea placeholder='Type your answer here...'
             onChange={(e)=>setAnswer(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                e.preventDefault();
+                if (!isintroPhase && !feedback && !isSubmitting && answer.trim()) {
+                  submitAnswer();
+                }
+              }
+            }}
             value={answer}
             className='flex-1 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white placeholder-slate-400 p-4 sm:p-6 rounded-2xl resize-none outline-none border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition min-h-40'
           />
@@ -590,10 +634,11 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
             <motion.button 
             onClick={submitAnswer}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !answer.trim()}
             whileTap={{ scale: 0.96 }}
-            className='flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-3 sm:py-4 rounded-2xl shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/40 transition font-semibold disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed cursor-pointer'>
-              {isSubmitting ? "Submitting..." : "Submit Answer"}
+            className='flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-3 sm:py-4 px-4 rounded-2xl shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/40 transition font-semibold disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:text-slate-500 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2'>
+              <span>{isSubmitting ? "Submitting..." : "Submit Answer"}</span>
+              <kbd className='hidden sm:inline-flex items-center text-[11px] font-mono font-medium px-2 py-0.5 rounded-lg bg-black/20 dark:bg-white/15 border border-white/20 text-white/90'>Ctrl + ↵</kbd>
             </motion.button>
 
             </div>
@@ -606,7 +651,11 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
               <button 
               onClick={handleNext}
-              className='w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl shadow-md transition flex items-center justify-center gap-1 font-semibold cursor-pointer'>Next Question <BsArrowRight size={18}/></button>
+              className='w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 sm:py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2 font-semibold cursor-pointer'>
+                <span>{currentIndex + 1 >= questions.length ? "Finish Interview" : "Next Question"}</span>
+                <kbd className='hidden sm:inline-flex items-center text-[11px] font-mono font-medium px-2 py-0.5 rounded-lg bg-black/20 dark:bg-white/15 border border-white/20 text-white/90'>Ctrl + ↵</kbd>
+                <BsArrowRight size={18}/>
+              </button>
             </motion.div>
           )}
 
