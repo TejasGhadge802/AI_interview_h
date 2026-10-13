@@ -17,12 +17,10 @@ const Step2Interview = ({interviewData, onFinish}) => {
   const [isintroPhase, setIsIntroPhase] = useState(true);
 
   const [isMicOn, setIsMicOn] = useState(true);
-  const [isListeningState, setIsListeningState] = useState(false);
   const recognitionRef = useRef(null);
   const isListeningRef = useRef(false);
   const isAIPlayingRef = useRef(false);
   const isMicOnRef = useRef(true);
-  const restartTimeoutRef = useRef(null);
   const [isAIPlaying, setIsAIPlaying] = useState(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -30,11 +28,8 @@ const Step2Interview = ({interviewData, onFinish}) => {
   const [feedback, setFeedback] = useState("");
   const [timeLeft, setTimeLeft] = useState(questions[0]?.timeLimit || 60);
   const [selectedVoice, setSelectedVoice] = useState(null);
-  const selectedVoiceRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [voiceGender, setVoiceGender] = useState("female");
-  const voiceGenderRef = useRef("female");
-  const availableVoicesRef = useRef([]);
   const [subtitle, setSubtitle] = useState("");
 
   const videoRef = useRef(null);
@@ -51,135 +46,60 @@ const Step2Interview = ({interviewData, onFinish}) => {
     isAIPlayingRef.current = isAIPlaying;
   }, [isAIPlaying]);
 
-  useEffect(() => {
-    voiceGenderRef.current = voiceGender;
-  }, [voiceGender]);
 
-  useEffect(() => {
-    selectedVoiceRef.current = selectedVoice;
-  }, [selectedVoice]);
 
-  // Keep mobile screen awake during the interview session
-  useEffect(() => {
-    let wakeLock = null;
-    const requestWakeLock = async () => {
-      if ('wakeLock' in navigator) {
-        try {
-          wakeLock = await navigator.wakeLock.request('screen');
-        } catch (_) {}
-      }
-    };
-    requestWakeLock();
-    return () => {
-      if (wakeLock) {
-        try { wakeLock.release(); } catch (_) {}
-      }
-    };
-  }, []);
 
-  // Comprehensive gender matchers across Windows, Mac, iOS, Android (Google TTS), Samsung TTS
-  const findVoiceForGender = (gender, voicesList) => {
-    if (!voicesList || !voicesList.length) return null;
 
-    const isFemaleMatch = (v) => {
-      const name = (v.name || "").toLowerCase();
-      return (
-        name.includes("female") ||
-        name.includes("zira") ||
-        name.includes("samantha") ||
-        name.includes("jenny") ||
-        name.includes("aria") ||
-        name.includes("victoria") ||
-        name.includes("karen") ||
-        name.includes("moira") ||
-        name.includes("tessa") ||
-        name.includes("fiona") ||
-        name.includes("veena") ||
-        name.includes("sfg#female") ||
-        name.includes("iol-local") ||
-        name.includes("cxx#female") ||
-        (name.includes("google us english") && !name.includes("male"))
-      );
-    };
-
-    const isMaleMatch = (v) => {
-      const name = (v.name || "").toLowerCase();
-      if (name.includes("female")) return false; // Avoid 'female' containing 'male'
-      return (
-        name.includes("david") ||
-        name.includes("mark") ||
-        name.includes("guy") ||
-        name.includes("daniel") ||
-        name.includes("alex") ||
-        name.includes("fred") ||
-        name.includes("oliver") ||
-        name.includes("arthur") ||
-        name.includes("aaron") ||
-        name.includes("george") ||
-        name.includes("rishi") ||
-        name.includes("tpd#male") ||
-        name.includes("iom#male") ||
-        /\bmale\b/.test(name)
-      );
-    };
-
-    if (gender === "female") {
-      const enFemale = voicesList.find(v => (v.lang || "").startsWith("en") && isFemaleMatch(v));
-      if (enFemale) return enFemale;
-      const anyFemale = voicesList.find(v => isFemaleMatch(v));
-      if (anyFemale) return anyFemale;
-      const enNonMale = voicesList.find(v => (v.lang || "").startsWith("en") && !isMaleMatch(v));
-      if (enNonMale) return enNonMale;
-      return voicesList[0];
-    } else {
-      const enMale = voicesList.find(v => (v.lang || "").startsWith("en") && isMaleMatch(v));
-      if (enMale) return enMale;
-      const anyMale = voicesList.find(v => isMaleMatch(v));
-      if (anyMale) return anyMale;
-      const enVoice = voicesList.find(v => (v.lang || "").startsWith("en"));
-      if (enVoice) return enVoice;
-      return voicesList[0];
-    }
-  };
-
-  const handleGenderChange = (newGender) => {
-    setVoiceGender(newGender);
-    voiceGenderRef.current = newGender;
-    const voice = findVoiceForGender(newGender, availableVoicesRef.current);
-    if (voice) {
-      setSelectedVoice(voice);
-      selectedVoiceRef.current = voice;
-    }
-  };
-
-  useEffect(() => {
-    const loadVoices = () => {
-      if (!window.speechSynthesis) return;
+  useEffect(()=>{
+    const loadVoices = ()=>{
       const voices = window.speechSynthesis.getVoices();
-      if (!voices.length) return;
 
-      availableVoicesRef.current = voices;
-      const targetVoice = findVoiceForGender(voiceGenderRef.current, voices);
-      if (targetVoice) {
-        setSelectedVoice(targetVoice);
-        selectedVoiceRef.current = targetVoice;
-      }
-    };
+      if(!voices.length) return;
+
+        // Femael Voice Default
+        const femaleVoice =
+          voices.find(v => 
+            v.name.toLowerCase().includes("zira") ||
+            v.name.toLowerCase().includes("samantha") ||
+            v.name.toLowerCase().includes("female")
+          );
+
+        if (femaleVoice){
+          setSelectedVoice(femaleVoice);
+          setVoiceGender("female");
+          return;
+        }
+
+          // Male Voice
+        const maleVoice =
+          voices.find(v => 
+            v.name.toLowerCase().includes("david") ||
+            v.name.toLowerCase().includes("mark") ||
+            v.name.toLowerCase().includes("male")
+          )
+
+        if (maleVoice){
+          setSelectedVoice(maleVoice);
+          setVoiceGender("male");
+          return;
+        }
+
+      setSelectedVoice(voices[0]);
+      setVoiceGender("female");
+    }
 
     loadVoices();
-    if (window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
-  }, []);
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  },[])
+
 
   const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
 
 
   /* ------------------------------ Speak Function ------------------------ */
-  /* ------------------------------ Speak Function ------------------------ */
   const speakText = (text) => {
-    return new Promise((resolve) => {
-      if (!window.speechSynthesis || !text) {
+    return new Promise((resolve)=> {
+      if(!window.speechSynthesis || !selectedVoice){
         resolve();
         return;
       }
@@ -191,138 +111,110 @@ const Step2Interview = ({interviewData, onFinish}) => {
         .replace(/\./g, ". ... ");
 
       const utterance = new SpeechSynthesisUtterance(humanText);
-      const voice = selectedVoiceRef.current || selectedVoice;
-      if (voice) {
-        utterance.voice = voice;
-        utterance.lang = voice.lang || "en-US";
-      } else {
-        utterance.lang = "en-US";
-      }
 
-      const currentGender = voiceGenderRef.current;
-      utterance.pitch = currentGender === "male" ? 0.85 : 1.05;
-      utterance.rate = currentGender === "male" ? 0.92 : 0.94;
+      utterance.voice = selectedVoice;
 
-      // Retain utterance on window to prevent Chrome mobile garbage-collection early cutoff
-      window.__currentUtterance = utterance;
+      utterance.rate = .92;
+      utterance.pitch = 1.05;
+      utterance.voice = selectedVoice;
 
-      let isFinished = false;
-      const finishSpeaking = () => {
-        if (isFinished) return;
-        isFinished = true;
-        if (safetyTimer) clearTimeout(safetyTimer);
-
-        if (videoRef.current) {
-          try {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
-          } catch (_) {}
-        }
-        isAIPlayingRef.current = false;
-        setIsAIPlaying(false);
-        window.__currentUtterance = null;
-
-        // 350ms delay gives mobile OS audio hardware time to release speaker before mic capture
-        setTimeout(() => {
-          if (isMicOnRef.current) {
-            startMic();
-          }
-          setSubtitle("");
-          resolve();
-        }, 350);
-      };
 
       utterance.onstart = () => {
         isAIPlayingRef.current = true;
         setIsAIPlaying(true);
-        stopMic();
-        if (videoRef.current) {
-          videoRef.current.play().catch(() => {});
+        stopMic();          // silence mic while AI speaks
+        videoRef.current?.play();
+      }
+
+      utterance.onend = () => {
+        videoRef.current?.pause();
+        videoRef.current.currentTime = 0;
+        isAIPlayingRef.current = false;
+        setIsAIPlaying(false);
+
+        if(isMicOnRef.current){
+          startMic();
         }
-      };
 
-      utterance.onend = finishSpeaking;
-
-      utterance.onerror = (e) => {
-        console.warn("Speech synthesis notice:", e);
-        finishSpeaking();
-      };
-
-      // Safety timeout: auto-resolve if mobile browser drops onend event
-      const maxSpeechMs = Math.max(4500, humanText.length * 95);
-      const safetyTimer = setTimeout(() => {
-        if (!isFinished) {
-          console.warn("Speech synthesis fallback timeout triggered");
-          finishSpeaking();
-        }
-      }, maxSpeechMs);
+        setTimeout(() => {
+          setSubtitle("");
+          resolve();
+        }, 300)
+      }
 
       setSubtitle(text);
       window.speechSynthesis.speak(utterance);
-    });
-  };
+    })
+  }
 
-  useEffect(() => {
-    if (!selectedVoice) return;
+
+
+  useEffect(()=>{
+    if(!selectedVoice) return;
 
     const runIntro = async () => {
-      if (isintroPhase) {
+      if(isintroPhase){
         await speakText(
           `Hi ${userName}, it's great to meet you today. I hope your feeling confident and ready.`
-        );
+        )
 
         await speakText(
           "I'll ask you a few questions. Just answer naturally, and take your time. let's begin."
-        );
+        )
 
         setIsIntroPhase(false);
-      } else if (currentQuestion) {
-        await new Promise((r) => setTimeout(r, 600));
+      }else if(currentQuestion){
+        await new Promise(r => setTimeout(r, 800));
 
-        if (currentIndex === questions.length - 1) {
+        if(currentIndex === questions.length-1){
           await speakText(
             "Alright, this one might be a bit more Challenging."
-          );
+          )
         }
 
         await speakText(currentQuestion.question);
+        // if(isMicOn){              //MIC ALREADY START CALLING STARTMIC AGAIN
+        //   startMic();
+        // }
       }
-    };
+    }
 
-    runIntro();
-  }, [selectedVoice, isintroPhase, currentIndex]);
+    runIntro()
+  }, [selectedVoice, isintroPhase, currentIndex])
 
-  useEffect(() => {
-    if (isintroPhase) return;
-    if (!currentQuestion) return;
-    if (isSubmitting) return;
+
+
+  useEffect(()=>{
+    if(isintroPhase) return;
+    if(!currentQuestion) return;
+    if(isSubmitting) return;
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
+      setTimeLeft((prev)=>{
+        if(prev <= 1){
+          clearInterval(timer)
           return 0;
         }
         return prev - 1;
-      });
+      })
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [isintroPhase, currentIndex, isSubmitting]);
+    return ()=>clearInterval(timer);
+  }, [isintroPhase, currentIndex, isSubmitting])
 
-  useEffect(() => {
-    if (!isintroPhase && currentQuestion) {
+
+  useEffect(()=>{
+    if(!isintroPhase && currentQuestion){
       setTimeLeft(currentQuestion.timeLimit || 60);
     }
-  }, [currentIndex]);
+  }, [currentIndex])
+
 
   // Clear saved speech transcript when advancing to the next question
   useEffect(() => {
     finalTranscriptRef.current = "";
-    setAnswer("");
   }, [currentIndex]);
 
-  /* ---------------------- Speech Recognition (STT) ---------------------- */
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -336,11 +228,9 @@ const Step2Interview = ({interviewData, onFinish}) => {
     recognition.lang = "en-US";
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
       isListeningRef.current = true;
-      setIsListeningState(true);
     };
 
     recognition.onresult = (event) => {
@@ -356,87 +246,62 @@ const Step2Interview = ({interviewData, onFinish}) => {
         }
       }
 
-      setAnswer((finalTranscriptRef.current + interim).trimStart());
+      setAnswer(finalTranscriptRef.current + interim);
     };
 
-    // Auto-restart with safe debounce on mobile when browser disconnects after pauses
+    // Auto-restart if browser cuts off after silence and mic is still on
     recognition.onend = () => {
       isListeningRef.current = false;
-      setIsListeningState(false);
-
       if (isMicOnRef.current && !isAIPlayingRef.current) {
-        if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
-        restartTimeoutRef.current = setTimeout(() => {
-          if (isMicOnRef.current && !isAIPlayingRef.current && !isListeningRef.current) {
-            try {
-              recognition.start();
-            } catch (err) {
-              if (err.name === "InvalidStateError") {
-                isListeningRef.current = true;
-                setIsListeningState(true);
-              }
-            }
-          }
-        }, 300);
+        try {
+          recognition.start();
+        } catch (_) {}
       }
     };
 
     recognition.onerror = (event) => {
-      if (event.error === "no-speech" || event.error === "aborted") {
-        isListeningRef.current = false;
-        setIsListeningState(false);
-        return;
-      }
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        console.warn("Speech recognition access denied:", event.error);
-        setIsMicOn(false);
-        isMicOnRef.current = false;
-      }
+      if (event.error === "no-speech") return;
+      if (event.error === "aborted") return;
+      console.warn("Speech recognition error:", event.error);
       isListeningRef.current = false;
-      setIsListeningState(false);
     };
 
     recognitionRef.current = recognition;
 
+    // Prompt for mic permission on mount so browser explicitly requests access
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          stream.getTracks().forEach((track) => track.stop());
+        })
+        .catch((err) => {
+          console.warn("Microphone access permission notice:", err);
+        });
+    }
+
     return () => {
-      if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
       try {
         recognition.stop();
         recognition.abort();
       } catch (_) {}
       isListeningRef.current = false;
-      setIsListeningState(false);
     };
   }, []);
 
   const startMic = () => {
-    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
-    if (!recognitionRef.current) return;
-    if (isListeningRef.current || isAIPlayingRef.current) return;
-
-    try {
-      recognitionRef.current.start();
-    } catch (err) {
-      if (err.name === "InvalidStateError") {
-        isListeningRef.current = true;
-        setIsListeningState(true);
-      } else {
-        restartTimeoutRef.current = setTimeout(() => {
-          if (isMicOnRef.current && !isAIPlayingRef.current && !isListeningRef.current) {
-            try {
-              recognitionRef.current?.start();
-            } catch (_) {}
-          }
-        }, 300);
+    if (recognitionRef.current && !isListeningRef.current && !isAIPlayingRef.current) {
+      try {
+        recognitionRef.current.start();
+      } catch (err) {
+        console.warn("Mic start notice:", err);
       }
     }
   };
 
   const stopMic = () => {
-    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
-    isListeningRef.current = false;
-    setIsListeningState(false);
     if (recognitionRef.current) {
+      isListeningRef.current = false;
       try {
         recognitionRef.current.stop();
       } catch (_) {}
@@ -447,12 +312,11 @@ const Step2Interview = ({interviewData, onFinish}) => {
     if (isMicOn) {
       isMicOnRef.current = false;
       stopMic();
-      setIsMicOn(false);
     } else {
       isMicOnRef.current = true;
-      setIsMicOn(true);
       startMic();
     }
+    setIsMicOn((prev) => !prev);
   };
 
 
@@ -576,38 +440,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
       <div className='w-full max-w-350 min-h-[80vh] bg-white dark:bg-[#1e293b] rounded-3xl shadow-xl dark:shadow-2xl border border-slate-200 dark:border-slate-700/80 flex flex-col lg:flex-row overflow-hidden transition-colors duration-200'>
 
         {/* Video section */}
-        <div className='w-full lg:w-[35%] bg-slate-50 dark:bg-slate-900/60 flex flex-col items-center p-6 space-y-5 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700/80'>
-            {/* Interviewer selector: Female (default) & Male */}
-            <div className='w-full max-w-md flex items-center justify-between px-1'>
-              <span className='text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider'>
-                Interviewer
-              </span>
-              <div className='inline-flex bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-xl text-xs font-medium border border-slate-300/50 dark:border-slate-700'>
-                <button
-                  type='button'
-                  onClick={() => handleGenderChange("female")}
-                  className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                    voiceGender === "female"
-                      ? "bg-white dark:bg-emerald-600 text-emerald-700 dark:text-white font-semibold shadow-xs"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                  }`}
-                >
-                  Female
-                </button>
-                <button
-                  type='button'
-                  onClick={() => handleGenderChange("male")}
-                  className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                    voiceGender === "male"
-                      ? "bg-white dark:bg-emerald-600 text-emerald-700 dark:text-white font-semibold shadow-xs"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                  }`}
-                >
-                  Male
-                </button>
-              </div>
-            </div>
-
+        <div className='w-full lg:w-[35%] bg-slate-50 dark:bg-slate-900/60 flex flex-col items-center p-6 space-y-6 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700/80'>
             <div className={`relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg transition-all duration-500 ${
               isAIPlaying 
                 ? "ring-4 ring-emerald-500 dark:ring-emerald-400 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 shadow-emerald-500/30 scale-[1.01]" 
@@ -619,7 +452,6 @@ const Step2Interview = ({interviewData, onFinish}) => {
                 ref={videoRef} 
                 muted
                 playsInline
-                webkit-playsinline="true"
                 preload='auto'
                 className='w-full h-auto object-cover'
               />
@@ -677,8 +509,8 @@ const Step2Interview = ({interviewData, onFinish}) => {
                   </span>
                 ) : isMicOn ? (
                   <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-300 dark:border-teal-500/30'>
-                    <span className={`w-2 h-2 rounded-full bg-teal-500 dark:bg-teal-400 inline-block ${isListeningState ? 'animate-ping' : ''}`}></span>
-                    {isListeningState ? "Listening" : "Mic Ready"}
+                    <span className='w-2 h-2 rounded-full bg-teal-500 dark:bg-teal-400 inline-block animate-ping'></span>
+                    Listening
                   </span>
                 ) : (
                   <span className='inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600'>
@@ -729,12 +561,8 @@ const Step2Interview = ({interviewData, onFinish}) => {
             )
           }
 
-          <textarea 
-            placeholder='Speak into the microphone or type your answer here...'
-            onChange={(e) => {
-              setAnswer(e.target.value);
-              finalTranscriptRef.current = e.target.value;
-            }}
+          <textarea placeholder='Type your answer here...'
+            onChange={(e)=>setAnswer(e.target.value)}
             onKeyDown={(e) => {
               if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                 e.preventDefault();
@@ -748,7 +576,7 @@ const Step2Interview = ({interviewData, onFinish}) => {
           />
 
           {!feedback ?(
-            <div className='flex items-center gap-3 sm:gap-4 mt-6 flex-wrap sm:flex-nowrap'>
+            <div className='flex items-center gap-4 mt-6'>
             {/* Mic button with pulsing glow & active audio wave bars */}
             <div className='relative flex items-center justify-center'>
               {/* Outer pulsing ping rings when mic is on and user can speak */}
@@ -777,32 +605,30 @@ const Step2Interview = ({interviewData, onFinish}) => {
 
             {/* Listening Live Audio Visualizer bars */}
             {isMicOn && !isAIPlaying && (
-              <div className='flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl shadow-xs'>
+              <div className='hidden sm:flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 px-3.5 py-2.5 rounded-2xl shadow-xs'>
                 <div className='flex items-center gap-0.5 h-4'>
                   <motion.span 
-                    animate={{ height: isListeningState ? ["4px", "14px", "6px"] : "4px" }} 
+                    animate={{ height: ["4px", "14px", "6px"] }} 
                     transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }} 
                     className='w-1 bg-emerald-500 dark:bg-emerald-400 rounded-full inline-block' 
                   />
                   <motion.span 
-                    animate={{ height: isListeningState ? ["8px", "4px", "16px", "8px"] : "4px" }} 
+                    animate={{ height: ["8px", "4px", "16px", "8px"] }} 
                     transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut", delay: 0.1 }} 
                     className='w-1 bg-teal-500 dark:bg-teal-300 rounded-full inline-block' 
                   />
                   <motion.span 
-                    animate={{ height: isListeningState ? ["14px", "6px", "12px"] : "4px" }} 
+                    animate={{ height: ["14px", "6px", "12px"] }} 
                     transition={{ repeat: Infinity, duration: 0.55, ease: "easeInOut", delay: 0.2 }} 
                     className='w-1 bg-emerald-500 dark:bg-emerald-400 rounded-full inline-block' 
                   />
                   <motion.span 
-                    animate={{ height: isListeningState ? ["6px", "16px", "4px"] : "4px" }} 
+                    animate={{ height: ["6px", "16px", "4px"] }} 
                     transition={{ repeat: Infinity, duration: 0.45, ease: "easeInOut", delay: 0.15 }} 
                     className='w-1 bg-teal-500 dark:bg-teal-300 rounded-full inline-block' 
                   />
                 </div>
-                <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-300 tracking-wide'>
-                  {isListeningState ? "Listening..." : "Mic Ready"}
-                </span>
+                <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-300 tracking-wide'>Listening...</span>
               </div>
             )}
 

@@ -28,20 +28,15 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
   const isListeningRef = useRef(false)
   const isAIPlayingRef = useRef(false)
   const isMicOnRef = useRef(true)
-  const restartTimeoutRef = useRef(null)
   const [isAIPlaying, setIsAIPlaying] = useState(false)
-  const [isListeningState, setIsListeningState] = useState(false)
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answer, setAnswer] = useState("")
   const [feedback, setFeedback] = useState("")
   const [timeLeft, setTimeLeft] = useState(questions[0]?.timeLimit || 60)
   const [selectedVoice, setSelectedVoice] = useState(null)
-  const selectedVoiceRef = useRef(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [voiceGender, setVoiceGender] = useState("female")
-  const voiceGenderRef = useRef("female")
-  const availableVoicesRef = useRef([])
   const [subtitle, setSubtitle] = useState("")
 
   // Real-time video engagement telemetry (Real Computer Vision & Speech Analysis)
@@ -70,32 +65,6 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
   useEffect(() => {
     isAIPlayingRef.current = isAIPlaying
   }, [isAIPlaying])
-
-  useEffect(() => {
-    voiceGenderRef.current = voiceGender
-  }, [voiceGender])
-
-  useEffect(() => {
-    selectedVoiceRef.current = selectedVoice
-  }, [selectedVoice])
-
-  // Keep mobile screen awake during the video interview session
-  useEffect(() => {
-    let wakeLock = null
-    const requestWakeLock = async () => {
-      if ('wakeLock' in navigator) {
-        try {
-          wakeLock = await navigator.wakeLock.request('screen')
-        } catch (_) {}
-      }
-    }
-    requestWakeLock()
-    return () => {
-      if (wakeLock) {
-        try { wakeLock.release() } catch (_) {}
-      }
-    }
-  }, [])
 
   // 1. REAL-TIME COMPUTER VISION EYE CONTACT DETECTOR
   // Analyzes real webcam feed via offscreen canvas (FaceDetector API + Kovac skin luminance symmetry)
@@ -338,100 +307,42 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
     }
   }
 
-  // Comprehensive gender matchers across Windows, Mac, iOS, Android (Google TTS), Samsung TTS
-  const findVoiceForGender = (gender, voicesList) => {
-    if (!voicesList || !voicesList.length) return null
-
-    const isFemaleMatch = (v) => {
-      const name = (v.name || "").toLowerCase()
-      return (
-        name.includes("female") ||
-        name.includes("zira") ||
-        name.includes("samantha") ||
-        name.includes("jenny") ||
-        name.includes("aria") ||
-        name.includes("victoria") ||
-        name.includes("karen") ||
-        name.includes("moira") ||
-        name.includes("tessa") ||
-        name.includes("fiona") ||
-        name.includes("veena") ||
-        name.includes("sfg#female") ||
-        name.includes("iol-local") ||
-        name.includes("cxx#female") ||
-        (name.includes("google us english") && !name.includes("male"))
-      )
-    }
-
-    const isMaleMatch = (v) => {
-      const name = (v.name || "").toLowerCase()
-      if (name.includes("female")) return false // Avoid 'female' containing 'male'
-      return (
-        name.includes("david") ||
-        name.includes("mark") ||
-        name.includes("guy") ||
-        name.includes("daniel") ||
-        name.includes("alex") ||
-        name.includes("fred") ||
-        name.includes("oliver") ||
-        name.includes("arthur") ||
-        name.includes("aaron") ||
-        name.includes("george") ||
-        name.includes("rishi") ||
-        name.includes("tpd#male") ||
-        name.includes("iom#male") ||
-        /\bmale\b/.test(name)
-      )
-    }
-
-    if (gender === "female") {
-      const enFemale = voicesList.find(v => (v.lang || "").startsWith("en") && isFemaleMatch(v))
-      if (enFemale) return enFemale
-      const anyFemale = voicesList.find(v => isFemaleMatch(v))
-      if (anyFemale) return anyFemale
-      const enNonMale = voicesList.find(v => (v.lang || "").startsWith("en") && !isMaleMatch(v))
-      if (enNonMale) return enNonMale
-      return voicesList[0]
-    } else {
-      const enMale = voicesList.find(v => (v.lang || "").startsWith("en") && isMaleMatch(v))
-      if (enMale) return enMale
-      const anyMale = voicesList.find(v => isMaleMatch(v))
-      if (anyMale) return anyMale
-      const enVoice = voicesList.find(v => (v.lang || "").startsWith("en"))
-      if (enVoice) return enVoice
-      return voicesList[0]
-    }
-  }
-
-  const handleGenderChange = (newGender) => {
-    setVoiceGender(newGender)
-    voiceGenderRef.current = newGender
-    const voice = findVoiceForGender(newGender, availableVoicesRef.current)
-    if (voice) {
-      setSelectedVoice(voice)
-      selectedVoiceRef.current = voice
-    }
-  }
-
   // Load Voices
   useEffect(() => {
     const loadVoices = () => {
-      if (!window.speechSynthesis) return
       const voices = window.speechSynthesis.getVoices()
       if (!voices.length) return
 
-      availableVoicesRef.current = voices
-      const targetVoice = findVoiceForGender(voiceGenderRef.current, voices)
-      if (targetVoice) {
-        setSelectedVoice(targetVoice)
-        selectedVoiceRef.current = targetVoice
+      const femaleVoice = voices.find(v => 
+        v.name.toLowerCase().includes("zira") ||
+        v.name.toLowerCase().includes("samantha") ||
+        v.name.toLowerCase().includes("female")
+      )
+
+      if (femaleVoice) {
+        setSelectedVoice(femaleVoice)
+        setVoiceGender("female")
+        return
       }
+
+      const maleVoice = voices.find(v => 
+        v.name.toLowerCase().includes("david") ||
+        v.name.toLowerCase().includes("mark") ||
+        v.name.toLowerCase().includes("male")
+      )
+
+      if (maleVoice) {
+        setSelectedVoice(maleVoice)
+        setVoiceGender("male")
+        return
+      }
+
+      setSelectedVoice(voices[0])
+      setVoiceGender("female")
     }
 
     loadVoices()
-    if (window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = loadVoices
-    }
+    window.speechSynthesis.onvoiceschanged = loadVoices
   }, [])
 
   const videoSource = voiceGender === "male" ? maleVideo : femaleVideo
@@ -439,7 +350,7 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
   // Speak Function
   const speakText = (text) => {
     return new Promise((resolve) => {
-      if (!window.speechSynthesis || !text) {
+      if (!window.speechSynthesis || !selectedVoice) {
         resolve()
         return
       }
@@ -451,71 +362,32 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
         .replace(/\./g, ". ... ")
 
       const utterance = new SpeechSynthesisUtterance(humanText)
-      const voice = selectedVoiceRef.current || selectedVoice
-      if (voice) {
-        utterance.voice = voice
-        utterance.lang = voice.lang || "en-US"
-      } else {
-        utterance.lang = "en-US"
-      }
-
-      const currentGender = voiceGenderRef.current
-      utterance.pitch = currentGender === "male" ? 0.85 : 1.05
-      utterance.rate = currentGender === "male" ? 0.92 : 0.94
-
-      // Retain utterance on window to prevent Chrome mobile garbage-collection early cutoff
-      window.__currentUtterance = utterance
-
-      let isFinished = false
-      const finishSpeaking = () => {
-        if (isFinished) return
-        isFinished = true
-        if (safetyTimer) clearTimeout(safetyTimer)
-
-        if (aiVideoRef.current) {
-          try {
-            aiVideoRef.current.pause()
-            aiVideoRef.current.currentTime = 0
-          } catch (_) {}
-        }
-        isAIPlayingRef.current = false
-        setIsAIPlaying(false)
-        window.__currentUtterance = null
-
-        // 350ms delay gives mobile OS audio hardware time to release speaker before mic capture
-        setTimeout(() => {
-          if (isMicOnRef.current) {
-            startMic()
-          }
-          setSubtitle("")
-          resolve()
-        }, 350)
-      }
+      utterance.voice = selectedVoice
+      utterance.rate = 0.92
+      utterance.pitch = 1.05
 
       utterance.onstart = () => {
         isAIPlayingRef.current = true
         setIsAIPlaying(true)
         stopMic()
-        if (aiVideoRef.current) {
-          aiVideoRef.current.play().catch(() => {})
-        }
+        aiVideoRef.current?.play()
       }
 
-      utterance.onend = finishSpeaking
+      utterance.onend = () => {
+        aiVideoRef.current?.pause()
+        if (aiVideoRef.current) aiVideoRef.current.currentTime = 0
+        isAIPlayingRef.current = false
+        setIsAIPlaying(false)
 
-      utterance.onerror = (e) => {
-        console.warn("Speech synthesis notice:", e)
-        finishSpeaking()
-      }
-
-      // Safety timeout: auto-resolve if mobile browser drops onend event
-      const maxSpeechMs = Math.max(4500, humanText.length * 95)
-      const safetyTimer = setTimeout(() => {
-        if (!isFinished) {
-          console.warn("Speech synthesis fallback timeout triggered")
-          finishSpeaking()
+        if (isMicOnRef.current) {
+          startMic()
         }
-      }, maxSpeechMs)
+
+        setTimeout(() => {
+          setSubtitle("")
+          resolve()
+        }, 300)
+      }
 
       setSubtitle(text)
       window.speechSynthesis.speak(utterance)
@@ -536,7 +408,7 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
         )
         setIsIntroPhase(false)
       } else if (currentQuestion) {
-        await new Promise(r => setTimeout(r, 600))
+        await new Promise(r => setTimeout(r, 800))
 
         if (currentIndex === questions.length - 1) {
           await speakText("Alright, this is the final question. Make it count.")
@@ -576,10 +448,9 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
 
   useEffect(() => {
     finalTranscriptRef.current = ""
-    setAnswer("")
   }, [currentIndex])
 
-  // Speech Recognition (STT)
+  // Speech Recognition
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition
@@ -593,11 +464,9 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
     recognition.lang = "en-US"
     recognition.continuous = true
     recognition.interimResults = true
-    recognition.maxAlternatives = 1
 
     recognition.onstart = () => {
       isListeningRef.current = true
-      setIsListeningState(true)
     }
 
     recognition.onresult = (event) => {
@@ -613,87 +482,49 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
         }
       }
 
-      setAnswer((finalTranscriptRef.current + interim).trimStart())
+      setAnswer(finalTranscriptRef.current + interim)
     }
 
-    // Auto-restart with safe debounce on mobile when browser disconnects after pauses
     recognition.onend = () => {
       isListeningRef.current = false
-      setIsListeningState(false)
-
       if (isMicOnRef.current && !isAIPlayingRef.current) {
-        if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current)
-        restartTimeoutRef.current = setTimeout(() => {
-          if (isMicOnRef.current && !isAIPlayingRef.current && !isListeningRef.current) {
-            try {
-              recognition.start()
-            } catch (err) {
-              if (err.name === "InvalidStateError") {
-                isListeningRef.current = true
-                setIsListeningState(true)
-              }
-            }
-          }
-        }, 300)
+        try {
+          recognition.start()
+        } catch (_) {}
       }
     }
 
     recognition.onerror = (event) => {
-      if (event.error === "no-speech" || event.error === "aborted") {
-        isListeningRef.current = false
-        setIsListeningState(false)
-        return
-      }
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        console.warn("Speech recognition access denied:", event.error)
-        setIsMicOn(false)
-        isMicOnRef.current = false
-      }
+      if (event.error === "no-speech") return
+      if (event.error === "aborted") return
+      console.warn("Speech recognition error:", event.error)
       isListeningRef.current = false
-      setIsListeningState(false)
     }
 
     recognitionRef.current = recognition
 
     return () => {
-      if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current)
       try {
         recognition.stop()
         recognition.abort()
       } catch (_) {}
       isListeningRef.current = false
-      setIsListeningState(false)
     }
   }, [])
 
   const startMic = () => {
-    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current)
-    if (!recognitionRef.current) return
-    if (isListeningRef.current || isAIPlayingRef.current) return
-
-    try {
-      recognitionRef.current.start()
-    } catch (err) {
-      if (err.name === "InvalidStateError") {
-        isListeningRef.current = true
-        setIsListeningState(true)
-      } else {
-        restartTimeoutRef.current = setTimeout(() => {
-          if (isMicOnRef.current && !isAIPlayingRef.current && !isListeningRef.current) {
-            try {
-              recognitionRef.current?.start()
-            } catch (_) {}
-          }
-        }, 300)
+    if (recognitionRef.current && !isListeningRef.current && !isAIPlayingRef.current) {
+      try {
+        recognitionRef.current.start()
+      } catch (err) {
+        console.warn("Mic start notice:", err)
       }
     }
   }
 
   const stopMic = () => {
-    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current)
-    isListeningRef.current = false
-    setIsListeningState(false)
     if (recognitionRef.current) {
+      isListeningRef.current = false
       try {
         recognitionRef.current.stop()
       } catch (_) {}
@@ -704,12 +535,11 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
     if (isMicOn) {
       isMicOnRef.current = false
       stopMic()
-      setIsMicOn(false)
     } else {
       isMicOnRef.current = true
-      setIsMicOn(true)
       startMic()
     }
+    setIsMicOn((prev) => !prev)
   }
 
   // Submit Answer
@@ -914,37 +744,11 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
                 <span className='flex items-center gap-1.5'>
                   <BsCpu className='text-emerald-500' size={14} /> AI Interviewer
                 </span>
-                <div className='flex items-center gap-2'>
-                  <div className='inline-flex bg-slate-200/80 dark:bg-slate-800 p-0.5 rounded-lg text-[11px] font-medium border border-slate-300/50 dark:border-slate-700'>
-                    <button
-                      type='button'
-                      onClick={() => handleGenderChange("female")}
-                      className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                        voiceGender === "female"
-                          ? "bg-white dark:bg-emerald-600 text-emerald-700 dark:text-white font-semibold shadow-xs"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                      }`}
-                    >
-                      Female
-                    </button>
-                    <button
-                      type='button'
-                      onClick={() => handleGenderChange("male")}
-                      className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                        voiceGender === "male"
-                          ? "bg-white dark:bg-emerald-600 text-emerald-700 dark:text-white font-semibold shadow-xs"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                      }`}
-                    >
-                      Male
-                    </button>
-                  </div>
-                  {isAIPlaying && (
-                    <span className='text-emerald-600 dark:text-emerald-400 flex items-center gap-1 animate-pulse'>
-                      <BsDot size={18} /> Speaking...
-                    </span>
-                  )}
-                </div>
+                {isAIPlaying && (
+                  <span className='text-emerald-600 dark:text-emerald-400 flex items-center gap-1 animate-pulse'>
+                    <BsDot size={18} /> Speaking...
+                  </span>
+                )}
               </div>
 
               <div className={`relative w-full aspect-video sm:aspect-16/10 rounded-2xl overflow-hidden bg-slate-900 shadow-md transition-all duration-300 ${
@@ -958,7 +762,6 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
                   ref={aiVideoRef} 
                   muted
                   playsInline
-                  webkit-playsinline="true"
                   preload='auto'
                   className='w-full h-full object-cover'
                 />
@@ -1102,8 +905,8 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
                   </label>
                   {isMicOn && !isAIPlaying && (
                     <span className='text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1'>
-                      <span className={`w-1.5 h-1.5 rounded-full bg-emerald-500 ${isListeningState ? 'animate-ping' : ''}`} />
-                      {isListeningState ? "Live transcribing your voice" : "Mic ready - speak or type"}
+                      <span className='w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping' />
+                      Live transcribing your voice
                     </span>
                   )}
                 </div>
@@ -1111,10 +914,7 @@ const Step2VideoInterview = ({ interviewData, onFinish }) => {
                 <textarea
                   placeholder='Speak into your microphone or type your answer here...'
                   value={answer}
-                  onChange={(e) => {
-                    setAnswer(e.target.value)
-                    finalTranscriptRef.current = e.target.value
-                  }}
+                  onChange={(e) => setAnswer(e.target.value)}
                   onKeyDown={(e) => {
                     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                       e.preventDefault()
