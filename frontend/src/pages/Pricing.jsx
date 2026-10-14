@@ -43,7 +43,7 @@ const Pricing = () => {
     {
       id: "basic",  
       name: "Starter Plan",
-      price: "₹1",  //Change to 100 and also update on line no. 64
+      price: "₹100",  
       credits: 150,
       description: "Great for focused practice and skill improvement.",
       features: [
@@ -75,7 +75,7 @@ const Pricing = () => {
       setLoadingPlan(plan.id);
 
       const amount = 
-        plan.id === "basic" ? 1 :
+        plan.id === "basic" ? 100 :
         plan.id === "pro" ? 500 : 0;
 
       const result = await axios.post(ServerUrl + "/api/payment/order", {
