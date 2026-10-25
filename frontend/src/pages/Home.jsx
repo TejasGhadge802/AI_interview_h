@@ -275,12 +275,13 @@ const Home = () => {
                   { y: [0, 12, 0] }
                 }
                 whileHover={{ rotate: 0, scale: 1.05 }}
+                whileTap={{ rotate: 0, scale: 1.05 }}
                 transition={{
                   duration: 4,
                   ease: "easeInOut",
                   repeat: Infinity,
                 }}
-                className={`relative bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white rounded-3xl border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500/60 p-8 sm:p-10 w-80 max-w-[90%] shadow-md dark:shadow-xl hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all
+                className={`relative bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white rounded-3xl border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500/60 active:border-emerald-500/60 p-8 sm:p-10 w-80 max-w-[90%] shadow-md dark:shadow-xl hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] active:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all cursor-pointer select-none
                 ${idx === 0 ? "-rotate-1" : ""}
                 ${idx === 1 ? "rotate-1 md:mt-6 shadow-xl" : ""}
                 ${idx === 2 ? "-rotate-1" : ""}`}
@@ -475,7 +476,7 @@ const Home = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.12 }}
-                  className='bg-white dark:bg-[#1e293b] rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-emerald-500/50 transition-all flex flex-col justify-between relative group'
+                  className='bg-white dark:bg-[#1e293b] rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md active:shadow-md hover:border-emerald-500/50 active:border-emerald-500/50 transition-all flex flex-col justify-between relative group cursor-pointer select-none'
                 >
                   <div>
                     <div className='flex items-center justify-between mb-4'>
@@ -551,7 +552,7 @@ const Home = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.15 }}
-                  className='bg-white dark:bg-[#1e293b] rounded-3xl p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-lg hover:border-emerald-500/40 transition-all flex flex-col justify-between'
+                  className='bg-white dark:bg-[#1e293b] rounded-3xl p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-lg active:shadow-lg hover:border-emerald-500/40 active:border-emerald-500/40 transition-all flex flex-col justify-between cursor-pointer select-none'
                 >
                   <div>
                     <div className='w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 flex items-center justify-center mb-6'>
@@ -627,7 +628,7 @@ const Home = () => {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.08 }}
-                    className='bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 rounded-2xl overflow-hidden shadow-xs hover:border-emerald-500/40 transition'
+                    className='bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700/80 rounded-2xl overflow-hidden shadow-xs hover:border-emerald-500/40 active:border-emerald-500/40 transition'
                   >
                     <button
                       onClick={() => setOpenSampleIndex(isOpen ? null : index)}

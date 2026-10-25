@@ -196,15 +196,15 @@ const Pricing = () => {
             <motion.div
               key={p.id}
               whileHover={!p.default ? { y: -5, scale: 1.02 } : {}}
-              whileTap={!p.default ? { scale: 0.98 } : {}}
+              whileTap={!p.default ? { scale: 1.02 } : {}}
               onClick={() => !p.default && setSelectedPlan(p.id)}
               className={`relative bg-white dark:bg-[#1e293b] rounded-2xl shadow-md dark:shadow-xl p-6 border-2 transition-all select-none
               ${
                 isSelected ? 
                 'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.25)]' : 
-                'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 active:border-emerald-400 active:bg-slate-50 dark:active:bg-slate-800/80 active:shadow-md'
+                'border-slate-200 dark:border-slate-700 hover:border-emerald-500 active:border-emerald-500 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] active:shadow-[0_0_25px_rgba(16,185,129,0.25)]'
               }
-              ${p.default ? 'cursor-not-allowed opacity-90' : 'cursor-pointer active:scale-[0.99]'}
+              ${p.default ? 'cursor-not-allowed opacity-90' : 'cursor-pointer'}
               `}
             >
               {p.default && (

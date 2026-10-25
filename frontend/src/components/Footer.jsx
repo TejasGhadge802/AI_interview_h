@@ -33,22 +33,22 @@ const Footer = () => {
                 </h3>
                 <ul className='space-y-2 text-sm text-slate-600 dark:text-slate-300'>
                   <li>
-                    <Link to="/preparation" className='inline-block py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition font-medium'>
+                    <Link to="/preparation" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition font-medium'>
                       Preparation Hub & All Guides
                     </Link>
                   </li>
                   <li>
-                    <Link to="/preparation/javascript-interview-questions-freshers" className='inline-block py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition'>
+                    <Link to="/preparation/javascript-interview-questions-freshers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
                       JavaScript for Freshers
                     </Link>
                   </li>
                   <li>
-                    <Link to="/preparation/hr-interview-questions-sample-answers" className='inline-block py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition'>
+                    <Link to="/preparation/hr-interview-questions-sample-answers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
                       HR Behavioral Q&A Playbook
                     </Link>
                   </li>
                   <li>
-                    <Link to="/preparation/react-interview-questions-answers" className='inline-block py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition'>
+                    <Link to="/preparation/react-interview-questions-answers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
                       React Questions & Answers
                     </Link>
                   </li>
@@ -62,18 +62,18 @@ const Footer = () => {
                 </h3>
                 <ul className='space-y-2 text-sm text-slate-600 dark:text-slate-300'>
                   <li>
-                    <Link to="/interview" className='inline-flex items-center gap-1 py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition font-medium'>
+                    <Link to="/interview" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition flex items-center gap-1 font-medium'>
                       <span>Start Interview</span>
                       <BsArrowRight size={12} />
                     </Link>
                   </li>
                   <li>
-                    <Link to="/pricing" className='inline-block py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition'>
+                    <Link to="/pricing" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
                       Pricing & Credits
                     </Link>
                   </li>
                   <li>
-                    <Link to="/history" className='inline-block py-1 hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 active:translate-x-1 transition'>
+                    <Link to="/history" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
                       Interview History
                     </Link>
                   </li>
