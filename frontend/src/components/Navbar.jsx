@@ -1,10 +1,10 @@
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion } from "motion/react"
-import { BsCoin, BsSun, BsMoon } from "react-icons/bs"
+import { BsCoin, BsSun, BsMoon, BsJournalBookmark } from "react-icons/bs"
 import { HiOutlineLogout } from "react-icons/hi"
 import { FaUserAstronaut } from 'react-icons/fa6'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { ServerUrl } from '../App'
 import { setUserData } from '../redux/userSlice'
@@ -21,6 +21,7 @@ const Navbar = () => {
     const [showAuth, setShowAuth] = useState(false)
 
     const navigate = useNavigate()
+    const location = useLocation()
     const dispatch = useDispatch()
 
     const handleLogout = async () => {
@@ -41,15 +42,31 @@ const Navbar = () => {
         initial={{opacity: 0, y:-50}}
         animate={{opacity: 1, y: 0}}
         transition={{duration:.3}}
-        className='w-full max-w-6xl bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white rounded-[3xl] shadow-md dark:shadow-lg border border-slate-200 dark:border-slate-700/80 px-6 sm:px-8 py-4 flex justify-between items-center relative transition-colors duration-200'>
-            <div onClick={()=>navigate("/")} className='flex items-center gap-3 cursor-pointer'>
-                <div className='bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 p-2 rounded-lg transition-colors'>
-                    <Logo size={20}/>
+        className='w-full max-w-6xl bg-white dark:bg-[#1e293b] text-slate-800 dark:text-white rounded-[3xl] shadow-md dark:shadow-lg border border-slate-200 dark:border-slate-700/80 px-4 sm:px-8 py-4 flex justify-between items-center relative transition-colors duration-200'>
+            <div className='flex items-center gap-3 sm:gap-6'>
+                <div onClick={()=>navigate("/")} className='flex items-center gap-2.5 cursor-pointer'>
+                    <div className='bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 p-2 rounded-lg transition-colors'>
+                        <Logo size={20}/>
+                    </div>
+                    <h1 className='font-semibold hidden sm:block text-lg text-slate-900 dark:text-white'>AI Interview</h1>
                 </div>
-                <h1 className='font-semibold hidden md:block text-lg text-slate-900 dark:text-white'>AI Interview</h1>
+
+                {/* Direct Navigation: Interview Preparation */}
+                <button
+                    onClick={() => navigate("/preparation")}
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition cursor-pointer ${
+                        location.pathname.startsWith("/preparation")
+                            ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 shadow-2xs"
+                            : "text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+                    }`}
+                    title="Interview Preparation Guides"
+                >
+                    <BsJournalBookmark size={15} className="text-emerald-500" />
+                    <span>Interview Prep</span>
+                </button>
             </div>
 
-            <div className='flex items-center gap-3 sm:gap-5 relative'>
+            <div className='flex items-center gap-2.5 sm:gap-5 relative'>
                 {/* Theme Toggle Button */}
                 <motion.button
                   whileHover={{ scale: 1.08 }}
@@ -75,8 +92,8 @@ const Navbar = () => {
                         setShowCreditPopup(!showCreditPopup);
                         setShowUserPopup(false)
                     }}
-                         className='flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-full text-md transition shadow-xs cursor-pointer'>
-                        <BsCoin size={20} className='text-amber-500 dark:text-amber-400'/> 
+                         className='flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-3 sm:px-4 py-2 rounded-full text-sm sm:text-md transition shadow-xs cursor-pointer'>
+                        <BsCoin size={18} className='text-amber-500 dark:text-amber-400'/> 
                         <span className='font-medium'>{userData?.credits || 0}</span>
                     </button>
 

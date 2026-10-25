@@ -10,6 +10,8 @@ import InterviewPage from './pages/InterviewPage'
 import InterviewHistory from './pages/InterviewHistory'
 import Pricing from './pages/Pricing'
 import InterviewReport from './pages/InterviewReport'
+import InterviewPreparation from './pages/InterviewPreparation'
+import ArticleDetail from './pages/ArticleDetail'
 
 export const ServerUrl = "https://ai-interview-h.onrender.com"
 
@@ -42,6 +44,8 @@ const App = () => {
       <Route path="/history" element={<InterviewHistory />} />
       <Route path="/pricing" element={<Pricing />} />
       <Route path="/report/:id" element={<InterviewReport />} />
+      <Route path="/preparation" element={<InterviewPreparation />} />
+      <Route path="/preparation/:slug" element={<ArticleDetail />} />
     </Routes>
   )
 }
