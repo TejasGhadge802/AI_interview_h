@@ -172,7 +172,7 @@ const Pricing = () => {
 
       <div className='max-w-6xl mx-auto mb-20 flex items-start gap-4'>
         
-        <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition shadow-xs cursor-pointer'>
+        <button onClick={()=>navigate("/")} className='mt-2 p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white active:scale-95 transition shadow-xs cursor-pointer'>
           <FaArrowLeft />
         </button>
 
@@ -195,15 +195,16 @@ const Pricing = () => {
           return(
             <motion.div
               key={p.id}
-              whileHover={!p.default && { y: -5, scale: 1.02 }}
+              whileHover={!p.default ? { y: -5, scale: 1.02 } : {}}
+              whileTap={!p.default ? { scale: 0.98 } : {}}
               onClick={() => !p.default && setSelectedPlan(p.id)}
-              className={`relative bg-white dark:bg-[#1e293b] rounded-2xl shadow-md dark:shadow-xl p-6 border-2 transition-all 
+              className={`relative bg-white dark:bg-[#1e293b] rounded-2xl shadow-md dark:shadow-xl p-6 border-2 transition-all select-none
               ${
                 isSelected ? 
                 'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.25)]' : 
-                'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 active:border-emerald-400 active:bg-slate-50 dark:active:bg-slate-800/80 active:shadow-md'
               }
-              ${p.default ? 'cursor-not-allowed opacity-90' : 'cursor-pointer'}
+              ${p.default ? 'cursor-not-allowed opacity-90' : 'cursor-pointer active:scale-[0.99]'}
               `}
             >
               {p.default && (
@@ -241,13 +242,13 @@ const Pricing = () => {
                         strokeLinejoin="round"
                         strokeWidth={3}
                         d="M5 13l4 4L19 7"
-                      />
+                      >
+                      </path>
                     </svg>
                     {feature}
                   </li>
                 ))}
               </ul>
-
 
               { 
                 !p.default &&
@@ -260,11 +261,11 @@ const Pricing = () => {
                     handelPayment(p)
                   }
                 }}
-                className={`w-full mt-8 py-3 rounded-xl font-semibold transition cursor-pointer 
+                className={`w-full mt-8 py-3 rounded-xl font-semibold transition cursor-pointer active:scale-95
                   ${
                     isSelected ?
-                    "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50" :
-                    "bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600"
+                    "bg-emerald-600 text-white hover:bg-emerald-500 active:bg-emerald-700 shadow-lg shadow-emerald-600/20 dark:shadow-emerald-950/50" :
+                    "bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 active:bg-slate-300 dark:active:bg-slate-600"
                   }`}>
                   {
                     loadingPlan === p.id ? 
