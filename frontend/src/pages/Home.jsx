@@ -20,7 +20,8 @@ import {
   BsPersonWorkspace
 } from 'react-icons/bs'
 import { HiSparkles } from 'react-icons/hi'
-import { FaVideo, FaCode, FaUserTie, FaRegComments, FaRobot } from 'react-icons/fa'
+import { FaVideo, FaCode, FaUserTie, FaRegComments, FaRobot, FaPython, FaDatabase, FaBrain } from 'react-icons/fa'
+import { BsBarChartFill } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import AuthModel from '../components/AuthModel'
 import Logo from '../components/Logo'
@@ -103,6 +104,74 @@ const Home = () => {
         question: "What is an idempotent API, and why is it crucial in financial or payment transactions?",
         idealAnswer: "An idempotent API produces identical side effects and state transitions even if invoked multiple times with identical parameters. In payment systems, transient network dropouts often cause clients to retry requests. By enforcing an Idempotency-Key header stored with an expiration lock in a cache, duplicate payment calls return the original transaction receipt rather than charging the customer's card twice.",
         keyTip: "Always mention the implementation mechanism: unique idempotency keys, atomic locks, and idempotency store."
+      }
+    ],
+    python: [
+      {
+        question: "How does Python handle memory management, and what causes the Global Interpreter Lock (GIL) constraint?",
+        idealAnswer: "CPython manages memory primarily through reference counting supplemented by a generational cyclic garbage collector for circular references. The GIL is a mutual exclusion lock preventing multiple native OS threads from executing Python bytecodes concurrently on multicore CPUs. For CPU-bound tasks, we use the multiprocessing module or C-extensions; for I/O-bound tasks, threading or asyncio provides high-throughput cooperative concurrency.",
+        keyTip: "Distinguish clearly between CPU-bound (multiprocessing) and I/O-bound (asyncio/threads) concurrency models."
+      },
+      {
+        question: "What is the difference between a Generator and a regular function, and when should you use yield?",
+        idealAnswer: "A regular function computes its entire result in memory and returns once, destroying its local stack frame. A generator uses the 'yield' keyword to pause execution, yield an item lazily to the caller, and preserve its local state across iterations. Generators use O(1) memory, making them essential for streaming large log files, database cursors, and gigabyte-scale datasets.",
+        keyTip: "Emphasize lazy evaluation and memory efficiency when dealing with massive data streams."
+      },
+      {
+        question: "How do Python decorators work under the hood, and why is functools.wraps important?",
+        idealAnswer: "Decorators are higher-order functions that take a callable, extend or modify its behavior via a closure, and return a new callable without altering the original source code. Using @functools.wraps(fn) inside the decorator is crucial because it preserves the original function's metadata, such as __name__, __doc__, and parameter signatures, which is vital for debugging and logging.",
+        keyTip: "Mention closures and preserving metadata using functools.wraps."
+      }
+    ],
+    sql: [
+      {
+        question: "In what logical order does a SQL engine execute clauses, and why can't you use SELECT aliases in WHERE?",
+        idealAnswer: "SQL clauses execute logically in this order: FROM and JOIN, then WHERE, GROUP BY, HAVING, SELECT, DISTINCT, ORDER BY, and finally LIMIT/OFFSET. Because the WHERE clause filters rows before the SELECT clause projects columns and binds aliases, referencing a SELECT alias in WHERE causes an unrecognized column error. We solve this by repeating the expression or wrapping it in a CTE.",
+        keyTip: "Recite the logical execution flow: FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY."
+      },
+      {
+        question: "What is the difference between ROW_NUMBER(), RANK(), and DENSE_RANK() in Window Functions?",
+        idealAnswer: "All three assign ranks within a PARTITION BY window ordered by specified columns. ROW_NUMBER always generates unique sequential integers (1, 2, 3, 4) regardless of ties. RANK assigns the same rank to identical values but skips subsequent numbers leaving gaps (1, 2, 2, 4). DENSE_RANK assigns identical ranks to ties without skipping numbers (1, 2, 2, 3), making it ideal for 'Top N' salary queries.",
+        keyTip: "Explain how ties are handled and whether numbers are skipped."
+      },
+      {
+        question: "How does a B-Tree index accelerate queries, and what makes a query non-SARGable?",
+        idealAnswer: "A B-Tree index maintains a self-balancing search tree on disk enabling O(log N) lookups and efficient range scans. A query is non-SARGable (Search Argument Able) when an indexed column is wrapped in a function—such as WHERE YEAR(created_at) = 2026—forcing the engine to execute a full table scan. Rewriting it as a range condition (created_at >= '2026-01-01' AND created_at < '2027-01-01') allows the B-Tree index to be used directly.",
+        keyTip: "Use the term SARGable and illustrate why functions on columns defeat index seek operations."
+      }
+    ],
+    datascience: [
+      {
+        question: "How do you evaluate a machine learning model on severely imbalanced datasets?",
+        idealAnswer: "Accuracy is deceptive on imbalanced datasets because predicting the majority class trivially achieves high accuracy while failing to detect positive cases. I evaluate models using Precision, Recall, and the F1-Score, or Precision-Recall AUC (PR-AUC) rather than ROC-AUC, because PR-AUC focuses on minority class performance without being skewed by large True Negative counts. Additionally, decision thresholds are calibrated based on business costs.",
+        keyTip: "Advocate PR-AUC over ROC-AUC for extreme class imbalance and emphasize business cost matrices."
+      },
+      {
+        question: "What is Data Leakage, and how do you prevent it in cross-validation pipelines?",
+        idealAnswer: "Data leakage happens when information from outside the training set contaminates model training—for example, performing global scaling or imputation across the entire dataset before splitting. To prevent leakage, all transformers must be fitted strictly on the training fold and applied to the test fold using Scikit-Learn Pipelines. For temporal data, TimeSeriesSplit must be used to prevent future data from leaking into the past.",
+        keyTip: "Highlight Scikit-Learn Pipeline encapsulation and TimeSeriesSplit for temporal datasets."
+      },
+      {
+        question: "How does L1 (Lasso) regularization differ mathematically and practically from L2 (Ridge)?",
+        idealAnswer: "L1 adds the absolute magnitude of coefficients (|w|) as a penalty, which drives less informative feature weights strictly to zero, performing automatic feature selection. L2 adds the squared magnitude (w^2), which shrinks weights smoothly toward zero without eliminating features entirely, making it superior for multicollinear datasets. ElasticNet combines both penalties.",
+        keyTip: "Mention that L1 yields sparse feature sets while L2 handles correlated predictor variables stably."
+      }
+    ],
+    ai: [
+      {
+        question: "How does Scaled Dot-Product Self-Attention work in the Transformer architecture?",
+        idealAnswer: "Self-attention computes dynamic relevance scores between all tokens in a sequence using Queries (Q), Keys (K), and Values (V): Attention(Q,K,V) = softmax((Q * K^T) / sqrt(d_k)) * V. Q and K matrix multiplication computes pairwise token similarity scores. Dividing by sqrt(d_k) stabilizes the variance, preventing the Softmax function from saturating into near-zero gradients. The normalized attention weights then compute a weighted sum of the Values.",
+        keyTip: "Explain why dividing by sqrt(d_k) prevents vanishing gradients in the Softmax function."
+      },
+      {
+        question: "How does LoRA (Low-Rank Adaptation) enable efficient fine-tuning of Large Language Models?",
+        idealAnswer: "Full fine-tuning updates billions of parameters, demanding massive GPU memory for optimizer states and gradients. LoRA freezes the original pretrained weight matrix W0 and decomposes the weight update into two low-rank matrices A and B (delta W = B * A), where rank r is much smaller than model dimensions. This reduces trainable parameters by over 99% while achieving performance competitive with full fine-tuning.",
+        keyTip: "Explain matrix decomposition W = W0 + (B * A) with rank r << min(d, k)."
+      },
+      {
+        question: "What is Retrieval-Augmented Generation (RAG), and how does Hybrid Search improve it?",
+        idealAnswer: "RAG connects an LLM to external knowledge stores by embedding documents into a vector database, retrieving relevant passages via semantic similarity, and injecting them into the LLM prompt to eliminate hallucinations. Hybrid Search combines dense semantic vector embeddings with sparse keyword search (BM25) using Reciprocal Rank Fusion, followed by a Cross-Encoder re-ranker to maximize retrieval precision.",
+        keyTip: "Highlight combining Dense Vector Search with BM25 keyword search and re-ranking."
       }
     ]
   }
@@ -598,6 +667,10 @@ const Home = () => {
                   { id: 'hr', label: 'HR & Behavioral', icon: <FaUserTie size={14} /> },
                   { id: 'frontend', label: 'Frontend / React', icon: <FaCode size={14} /> },
                   { id: 'backend', label: 'Backend & Systems', icon: <BsPersonWorkspace size={14} /> },
+                  { id: 'python', label: 'Python', icon: <FaPython size={14} /> },
+                  { id: 'sql', label: 'SQL', icon: <FaDatabase size={13} /> },
+                  { id: 'datascience', label: 'Data Science', icon: <BsBarChartFill size={13} /> },
+                  { id: 'ai', label: 'AI & ML', icon: <FaBrain size={14} /> },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -605,7 +678,7 @@ const Home = () => {
                       setSampleTab(tab.id)
                       setOpenSampleIndex(0)
                     }}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition cursor-pointer ${
+                    className={`flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition cursor-pointer ${
                       sampleTab === tab.id
                         ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
                         : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'

@@ -34,22 +34,27 @@ const Footer = () => {
                 <ul className='space-y-2 text-sm text-slate-600 dark:text-slate-300'>
                   <li>
                     <Link to="/preparation" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition font-medium'>
-                      Preparation Hub & All Guides
+                      Preparation Hub & All 7 Guides
                     </Link>
                   </li>
                   <li>
-                    <Link to="/preparation/javascript-interview-questions-freshers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
-                      JavaScript for Freshers
+                    <Link to="/preparation/python-interview-questions-and-answers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
+                      Python Core & OOP
                     </Link>
                   </li>
                   <li>
-                    <Link to="/preparation/hr-interview-questions-sample-answers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
-                      HR Behavioral Q&A Playbook
+                    <Link to="/preparation/sql-interview-questions-and-query-mastery" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
+                      SQL & Window Functions
                     </Link>
                   </li>
                   <li>
-                    <Link to="/preparation/react-interview-questions-answers" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
-                      React Questions & Answers
+                    <Link to="/preparation/data-science-interview-questions-and-practical-modeling" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
+                      Data Science & Metrics
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/preparation/artificial-intelligence-and-machine-learning-interview-guide" className='hover:text-emerald-600 dark:hover:text-emerald-400 active:text-emerald-600 dark:active:text-emerald-400 transition'>
+                      AI, LLMs & Transformers
                     </Link>
                   </li>
                 </ul>

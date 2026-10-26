@@ -13,7 +13,8 @@ import {
   BsLightbulb,
   BsShieldCheck
 } from 'react-icons/bs'
-import { FaReact, FaJsSquare, FaUserTie } from 'react-icons/fa'
+import { FaReact, FaJsSquare, FaUserTie, FaPython, FaDatabase, FaBrain } from 'react-icons/fa'
+import { BsBarChartFill } from 'react-icons/bs'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { preparationArticles } from '../data/preparationArticles'
@@ -23,7 +24,16 @@ const InterviewPreparation = () => {
   const [activeCategory, setActiveCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const categories = ['All', 'JavaScript', 'React', 'HR & Behavioral']
+  const categories = [
+    'All', 
+    'JavaScript', 
+    'React', 
+    'Python', 
+    'SQL', 
+    'Data Science', 
+    'AI & Machine Learning', 
+    'HR & Behavioral'
+  ]
 
   const filteredArticles = preparationArticles.filter(article => {
     const matchesCategory = activeCategory === 'All' || article.category === activeCategory
@@ -40,6 +50,14 @@ const InterviewPreparation = () => {
         return <FaJsSquare className="text-amber-500" size={22} />
       case 'React':
         return <FaReact className="text-cyan-500" size={22} />
+      case 'Python':
+        return <FaPython className="text-blue-500" size={22} />
+      case 'SQL':
+        return <FaDatabase className="text-orange-500" size={20} />
+      case 'Data Science':
+        return <BsBarChartFill className="text-purple-500" size={20} />
+      case 'AI & Machine Learning':
+        return <FaBrain className="text-emerald-500" size={21} />
       case 'HR & Behavioral':
         return <FaUserTie className="text-emerald-500" size={20} />
       default:
